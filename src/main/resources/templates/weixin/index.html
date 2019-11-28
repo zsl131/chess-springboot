@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinIndexModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>奇思教育</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/weixin-index.css"/>
+    <script type="text/javascript" src="/weixin/weixin-index.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div class="index-header">
+            <div class="index-header-title"><img src="/logo-108.png"/>奇思教育</div>
+            <div class="index-header-con">
+                <div class="weui-flex count-div">
+                    <div class="weui-flex__item">
+                        <p class="label">科普活动次数</p>
+                        <p class="value" th:text="${recordCount}">1234</p>
+                    </div>
+                    <div class="weui-flex__item">
+                        <p class="label">报名人次</p>
+                        <p class="value" th:text="${recordCount*82}">1234</p>
+                    </div>
+                    <div class="weui-flex__item">
+                        <p class="label">参与人次</p>
+                        <p class="value" th:text="${recordCount*80}">1234</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="index-content">
+            <div class="weui-tab">
+                <div class="weui-navbar">
+                    <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+                        科普活动
+                    </a>
+                    <a class="weui-navbar__item" href="#tab2">
+                        最新报名
+                    </a>
+                    <a class="weui-navbar__item" href="#tab3">
+                        最新公告
+                    </a>
+                </div>
+                <div class="weui-tab__bd">
+                    <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+                        <a th:href="|/wx/activity/show?id=${act.id}|" class="weui-media-box weui-media-box_appmsg" th:each="act: ${activityList}">
+                            <div class="weui-media-box__hd">
+                                <img class="weui-media-box__thumb" th:src="${act.imgUrl}" alt=""/>
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">
+                                    <span th:remove="tag" th:text="${act.title}"></span>
+                                    <!--<span class="weui-media-box__title-after" th:text="${act.createDate}">下午8:12</span>-->
+                                </h4>
+                                <p class="weui-media-box__desc" th:text="${act.guide}">小李明天早上帮我带两个包子，一个猪肉粉丝和一个奶黄包</p>
+                            </div>
+                        </a>
+                        <a href="/wx/activity/index" class="weui-btn weui-btn_default">更多科普活动...</a>
+                    </div>
+                    <div id="tab2" class="weui-tab__bd-item">
+                        <a href="javascript:void(0)" class="weui-media-box weui-media-box_appmsg" th:each="stu: ${studentList}">
+                            <div class="weui-media-box__hd">
+                                <img class="weui-media-box__thumb" th:src="${stu.avatarUrl}" alt=""/>
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">
+                                    <span th:remove="tag" th:text="|${stu.stuName}同学|"></span>
+                                    <!--<span class="weui-media-box__title-after" th:text="${act.createDate}">下午8:12</span>-->
+                                </h4>
+                                <p class="weui-media-box__desc" th:text="|报名时间：${stu.createTime}|">小李明天早上帮我带两个包子，一个猪肉粉丝和一个奶黄包</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div id="tab3" class="weui-tab__bd-item">
+                        <a th:href="|/weixin/notice/show?id=${notice.id}|" class="weui-media-box weui-media-box_appmsg" th:each="notice: ${noticeList}">
+                            <div class="weui-media-box__hd">
+                                <img class="weui-media-box__thumb" th:src="${notice.picPath}" alt=""/>
+                            </div>
+                            <div class="weui-media-box__bd">
+                                <h4 class="weui-media-box__title">
+                                    <span th:remove="tag" th:text="${notice.title}"></span>
+                                    <!--<span class="weui-media-box__title-after" th:text="${act.createDate}">下午8:12</span>-->
+                                </h4>
+                                <p class="weui-media-box__desc" th:text="${notice.guide}">小李明天早上帮我带两个包子，一个猪肉粉丝和一个奶黄包</p>
+                            </div>
+                        </a>
+                        <a href="/weixin/notice/index" class="weui-btn weui-btn_default">更多通知公告...</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>活动签到</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-record-sign-in.css"/>
+    <script type="text/javascript" src="/weixin/activity-record-sign-in.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <input th:value="${record.id}" name="recordId" type="hidden"/>
+        <span th:each="act: ${actList}">
+            <input th:value="${act.stuId}" class="record_input" type="hidden"/>
+        </span>
+        <div class="card">
+            <div class="card-title" th:text="${record.actTitle}"></div>
+            <div class="card-content">
+                <p th:text="|时间：${record.holdTime}|"></p>
+                <p th:text="|地点：${record.address}|"></p>
+            </div>
+        </div>
+
+        <div th:each=" obj : ${actList}" class="card">
+            <div class="card-title stu-name" th:text="${obj.stuName}"></div>
+            <div class="card-content">
+                <p th:text="|活动名称：${obj.actTitle}|"></p>
+                <p th:text="|开展时间：${obj.holdTime}|"></p>
+                <p>当前状态：<span th:if="${obj.status eq '0'}" class="">未审核</span>
+                    <span th:if="${obj.status eq '1'}" class="blue">审核通过</span>
+                    <span th:if="${obj.status eq '2'}" class="red">被驳回</span>
+                </p>
+            </div>
+            <div class="card-footer" th:if="${obj.status eq '1'}">
+                <p th:if="${obj.hasCheck eq '0'}">
+                    <button class="weui-btn weui-btn_primary" onclick="onCheck(this)" th:attr="objId=${obj.id}">点击签到</button>
+                </p>
+                <p th:if="${obj.hasCheck eq '1'}" class="has-checked">已成功签到</p>
+            </div>
+        </div>
+
+        <div  th:if="${#lists.size(actList) le 0}">
+            <div  class="alert alert-warning" role="alert" style="text-align:center;">未检索到你的申请信息</div>
+            <div class="card">
+                <div class="card-title">通过手机号码查找</div>
+                <div class="card-content">
+                    <input type="number" maxlength="11" class="form-control" name="phone" id="phone" placeholder="输入申请时预留的手机号码" />
+                </div>
+                <div class="card-footer">
+                    <button class="weui-btn weui-btn_mini weui-btn_primary" onclick="findByPhone()">点击查找</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

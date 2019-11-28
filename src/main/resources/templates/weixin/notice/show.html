@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${notice.title}">奇思教育-通知公告</title>
+    <meta name="description" id="description" th:content="${notice.guide}"/>
+    <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js" language="JavaScript"></script>    <!-- 微信js -->
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-show.css"/>
+    <link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet"/>
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+    <script type="text/javascript" src="/weixin/weixin-share.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <div class="header">
+                <h3 class="title" th:text="${notice.title}"></h3>
+                <p class="icon">
+                    <span th:text="${notice.createTime}"></span>
+                </p>
+            </div>
+            <div class="guide" th:text="${notice.guide}"></div>
+            <div th:if="${video ne null}" style="padding: 10px;">
+                <video id='my-video' class='video-js' controls="true" preload='auto' style="width:100%; height:264px;" data-setup='{}'>
+                    <source th:src='${video.url}' type='video/mp4'/>
+                    <p class='vjs-no-js'>
+                        To view this video please enable JavaScript, and consider upgrading to a web browser that
+                        <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+                    </p>
+                </video>
+
+                <input th:value="${notice.picPath}" type="hidden" class="imgUrl"/>
+                <script src='https://vjs.zencdn.net/7.5.5/video.js'></script>
+            </div>
+            <div class="content" th:utext="${notice.content}"></div>
+        </div>
+    </div>
+</body>
+</html>

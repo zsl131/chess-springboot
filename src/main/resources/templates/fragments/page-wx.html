@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/page">
+
+    <head>
+    </head>
+    <body>
+        <div th:fragment="pager">
+            <div th:if="${datas.totalPages gt 1}" class="text-right" th:with="baseUrl=${#httpServletRequest.getRequestURL().toString()},pars=${#httpServletRequest.getQueryString() eq null ? '' : new String(#httpServletRequest.getQueryString().getBytes('iso8859-1'), 'UTF-8')}">
+                <ul style="margin:0px;" class="pagination" th:with="newPar=${new java.lang.String(pars eq null ? '' : pars).replace('page='+(datas.number), '')},
+                                                curTmpUrl=${baseUrl+'?'+newPar},
+                                                curUrl=${curTmpUrl.endsWith('&amp;') ? curTmpUrl.substring(0, curTmpUrl.length()-1):curTmpUrl}" >
+                    <!--<li th:text="${pars}"></li>-->
+
+                    <li><a href="#" th:href="@{${curUrl}(page=0)}">首页</a></li>
+                    <li th:if="${datas.hasPrevious()}"><a href="#" th:href="@{${curUrl}(page=${datas.number-1})}">上</a></li>
+
+                    <li class="active"><span class="current_page line_height" th:text="${datas.number+1}"></span></li>
+
+                    <li th:if="${datas.hasNext()}"><a href="#" th:href="@{${curUrl}(page=${datas.number+1})}">下</a></li>
+                    <!--<li><a href="#" th:href="@{${curUrl}(page=${datas.totalPages-1})}">尾页</a></li>-->
+                    <li><a href="#" th:href="${datas.totalPages le 0 ? curUrl+'page=0':curUrl+'&amp;page='+(datas.totalPages-1)}">尾页</a></li>
+                    <li><span th:utext="${datas.totalPages}+'页 / '+${datas.totalElements}+' 条'"></span></li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>

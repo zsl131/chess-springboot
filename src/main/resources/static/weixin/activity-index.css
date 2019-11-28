@@ -1,0 +1,35 @@
+
+.activity-header {
+    font-size: 14px; border-left: 3px #2cabcf solid; line-height: 25px; padding-left: 12px; margin: 8px 0px 8px 12px;
+}
+hr {
+    margin:0px;
+}
+
+.single-activity {
+    border:1px #ddd solid; border-radius: 5px; margin: 5px 3px;
+}
+.single-activity .header {
+    color:#333; border-bottom: 1px #ddd solid; padding: 4px 5px;
+}
+.single-activity .header a {
+    color:#333;
+}
+.single-activity .content {
+    margin: 3px 5px;
+}
+
+.single-activity .content .guide {
+    color:#999;
+}
+
+.single-activity .content .icon {
+    color:#aaa;
+}
+.single-activity .content .icon span {
+    padding-left: 5px; font-size:12px;
+}
+
+.single-activity .content img {
+    width: 100%;
+}

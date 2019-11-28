@@ -1,0 +1,34 @@
+.demos-header {
+    padding: 0px 10px;
+}
+.demos-title {
+    font-size:22px;
+}
+.demos-title span.from {
+    font-size: 14px;
+}
+.demos-title span.from-1 {
+    color:#f00;
+}
+
+.demos-title span.from-0 {
+    color:#00F;
+}
+
+.status-0 {
+    color:#820; font-weight: bold;
+}
+.status-1 {
+    color:#00f; font-weight: bold;
+}
+.status-2 {
+    color:#F00;
+}
+
+.stu_detail {
+    font-size:14px; color:#888; font-weight:normal;
+}
+
+.already_stu {
+    color:#F00;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>奇思教育-活动中心</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-record-sign.css"/>
+    <script type="text/javascript" src="/weixin/activity-record-signUp.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <input th:value="${from}" name="from" type="hidden"/>
+        <input th:value="${record.id}" name="recordId" type="hidden"/>
+        <span th:each="act: ${actList}">
+            <input th:value="${act.stuId}" th:attr="status=${act.status}" class="record_input" type="hidden"/>
+        </span>
+        <header class='demos-header'>
+            <h1 class="demos-title">活动报名
+                <span th:if="${from eq '1'}" class="from from-1">(受邀请报名)</span>
+                <span th:unless="${from eq '1'}" class="from from-0">(社会报名)</span>
+            </h1>
+        </header>
+
+        <div class="weui-form-preview">
+            <div class="weui-form-preview__hd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">活动名称</label>
+                    <em class="weui-form-preview__value" th:text="${record.actTitle}">¥2400.00</em>
+                </div>
+            </div>
+            <div class="weui-form-preview__bd">
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">活动时间</label>
+                    <span class="weui-form-preview__value" th:text="${record.holdTime}">电动打蛋机</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">活动地点</label>
+                    <span class="weui-form-preview__value" th:text="${record.address}">名字</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">联系电话</label>
+                    <span class="weui-form-preview__value" th:text="${record.phone}">名字</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">限制</label>
+                    <span class="weui-form-preview__value" th:text="|${record.maxCount} 个家庭|">名字</span>
+                </div>
+                <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">状态</label>
+                    <span class="weui-form-preview__value">
+                        <span th:if="${record.status eq '0'}" class="status-0">未开始</span>
+                        <span th:if="${record.status eq '1'}" class="status-1">报名中</span>
+                        <span th:if="${record.status eq '2'}" class="status-2">已结束</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">学生列表</div>
+        <div class="weui-cells weui-cells_checkbox student-list">
+            <label class="weui-cell weui-check__label" th:each="stu : ${studentList}" th:for="|stu_${stu.id}|">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="student" th:attr="stuName=${stu.name}, stuId=${stu.id}" th:id="|stu_${stu.id}|"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p><span th:text="${stu.name}" th:remove="tag"></span><span class="already_stu" th:id="|act_id_${stu.id}|"></span></p>
+                    <p class="stu_detail" th:text="|${stu.ageName}｜${stu.schoolName}｜${stu.sex eq '1'?'男':'女'}｜${stu.phone}|">详情</p>
+                </div>
+            </label>
+            <div class="weui-form-preview__ft">
+                <button type="button" class="weui-form-preview__btn weui-form-preview__btn_default" onclick="optStu('0')">删除所选学生</button>
+                <button type="button" class="weui-form-preview__btn weui-form-preview__btn_primary" onclick="optStu('1')">确定报名</button>
+            </div>
+            <a href="javascript:void(0);" class="weui-cell weui-cell_link">
+                <div class="weui-cell__bd add-student weui-btn weui-btn_mini weui-btn_primary">添加学生</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

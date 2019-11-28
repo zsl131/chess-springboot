@@ -1,0 +1,41 @@
+html, body {
+    background:#f1f1f1;
+}
+.index-header {
+    height: 100px; background: linear-gradient(to right, #f07e17, #ffae12); position: relative;
+}
+
+.index-header-title {
+    text-align:center; color:#FFF; padding-top: 10px; font-size: 22px;
+}
+
+.index-header-title img {
+    width:40px;
+}
+
+.index-header-con {
+    height:80px; background:#FFF; width:94%; margin:0px 3% 0px 3%; border-radius: 5px; position: absolute; bottom: -40px;
+}
+
+
+.index-content {
+    background:#FFF; width:94%; margin: 60px 3% 10px 3%; border-radius: 5px; min-height:300px;
+}
+
+.count-div div {
+    border-right: 1px #ddd solid; text-align: center; height: 60px; margin-top: 10px;
+}
+.count-div div:last-child {
+    border-right: none;
+}
+.count-div p.label {
+    color:#888; font-weight: normal;
+}
+
+.weui-navbar a {
+    text-decoration: none;
+}
+
+.weui-navbar__item.weui-bar__item--on {
+    background:#27aacf; color:#FFF;
+}

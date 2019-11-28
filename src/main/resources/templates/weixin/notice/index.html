@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>奇思教育-通知公告</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-index.css"/>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <h2 class="activity-header">通知公告&nbsp;(<span th:text="${datas.totalElements}"></span>)</h2>
+            <hr/>
+            <div th:each="obj : ${datas}" th:remove="tag">
+                <div class="single-activity">
+                    <p class="header"><a th:text="${obj.title}" th:href="@{/weixin/notice/show(id=${obj.id})}"></a></p>
+                    <div class="content">
+                        <a th:href="@{/weixin/notice/show(id=${obj.id})}"><img th:src="${obj.picPath}"/></a>
+                        <p class="guide" th:text="${obj.guide}"></p>
+                    </div>
+                </div>
+            </div>
+            <div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.header {
+    text-align:center;
+}
+.header .title {
+    font-size:22px;
+}
+.header .icon {
+    color:#bbb; font-size:13px;
+}
+.guide {
+    background:#f8f8f8; border-left:4px #ddd solid; padding:4px 8px; color:#888; margin: 0px 10px;
+}
+.content {
+    margin: 10px 8px;
+}
+.single-record {
+    margin: 10px 10px 0px 10px; border-bottom: 1px #e0e0e0 solid; padding-bottom: 8px;
+}
+.single-record p {
+    margin:0px;
+}
+.single-record p.holdTime {
+
+}
+.single-record p.address {
+    color:#999;
+}
