@@ -31,4 +31,4 @@ sms.properties
 kaoqin.properties
 *.bat
 
-application-*.properties
+#application-*.properties
