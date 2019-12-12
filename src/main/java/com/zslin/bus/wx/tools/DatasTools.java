@@ -6,15 +6,18 @@ import com.zslin.basic.tools.DateTools;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.basic.dao.INoticeDao;
 import com.zslin.bus.basic.model.Notice;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.wx.annotations.HasScore;
 import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.ScoreAnnotation;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
 import com.zslin.bus.wx.dao.IFeedbackDao;
 import com.zslin.bus.wx.dao.IWxAccountDao;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.model.Feedback;
 import com.zslin.bus.wx.model.WxAccount;
 import org.json.JSONObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +63,9 @@ public class DatasTools {
     @Autowired
     private INoticeDao noticeDao;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /** 当用户取消关注时 */
     public void onUnsubscribe(String openid) {
         wxAccountDao.updateStatus(openid, "0");
@@ -101,7 +107,9 @@ public class DatasTools {
 //            sb.append("反馈用户：").append(f.getNickname()).append(" \\n")
 //                    .append("反馈内容：").append(content);
 //            eventTools.eventRemind(adminOpenids, "在线反馈", "收到在线反馈信息", NormalTools.curDate("yyyy-MM-dd HH:mm"), sb.toString(), "/wx/feedback/list");
-            templateMessageTools.sendMessageByThread("在线反馈", adminOpenids, "/wx/feedback/list", "您有一条新的反馈信息！", "反馈日期="+NormalTools.curDate("yyyy-MM-dd HH:mm"), "反馈用户="+f.getNickname(), "反馈内容="+content);
+//            templateMessageTools.sendMessageByThread("在线反馈", adminOpenids, "/wx/feedback/list", "您有一条新的反馈信息！", "反馈日期="+NormalTools.curDate("yyyy-MM-dd HH:mm"), "反馈用户="+f.getNickname(), "反馈内容="+content);
+            SendMessageDto smd = new SendMessageDto("在线反馈", adminOpenids, "/wx/feedback/list", "您有一条新的反馈信息！", "反馈日期="+NormalTools.curDate("yyyy-MM-dd HH:mm"), "反馈用户="+f.getNickname(), "反馈内容="+content);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
             return "";
         }
     }

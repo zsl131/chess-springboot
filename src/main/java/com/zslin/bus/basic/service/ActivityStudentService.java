@@ -10,6 +10,7 @@ import com.zslin.bus.basic.dao.IActivityStudentDao;
 import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.basic.model.ActivityStudent;
 import com.zslin.bus.common.dto.QueryListDto;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonParamTools;
@@ -18,8 +19,10 @@ import com.zslin.bus.wx.annotations.HasScore;
 import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.ScoreAnnotation;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.tools.ScoreTools;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,9 @@ public class ActivityStudentService {
 
     @Autowired
     private IActivityRecordDao activityRecordDao;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
@@ -87,12 +93,18 @@ public class ActivityStudentService {
             if("1".equalsIgnoreCase(status)) {title = "恭喜您，您的活动申请已通过";}
             else {title = "很遗憾，您的活动申请被驳回";}
 
-            templateMessageTools.sendMessageByThread("活动审核结果通知", as.getOpenid(), "/wx/activityRecord/signUp?recordId="+as.getRecordId(), title,
+            /*templateMessageTools.sendMessageByThread("活动审核结果通知", as.getOpenid(), "/wx/activityRecord/signUp?recordId="+as.getRecordId(), title,
+                    TemplateMessageTools.field("活动主题", as.getActTitle()),
+                    TemplateMessageTools.field("活动时间", as.getHoldTime()),
+                    TemplateMessageTools.field("审核结果", "1".equals(status)?"通过":"驳回"),
+                    TemplateMessageTools.field("1".equals(status)?("通过".equals(reason)?"":("注意事项："+reason+"若有事无法参与活动，请提前与我们联系，如一年内出现两次无故缺席将无法参与我们的活动。")):reason));*/
+
+            SendMessageDto smd = new SendMessageDto("活动审核结果通知", as.getOpenid(), "/wx/activityRecord/signUp?recordId="+as.getRecordId(), title,
                     TemplateMessageTools.field("活动主题", as.getActTitle()),
                     TemplateMessageTools.field("活动时间", as.getHoldTime()),
                     TemplateMessageTools.field("审核结果", "1".equals(status)?"通过":"驳回"),
                     TemplateMessageTools.field("1".equals(status)?("通过".equals(reason)?"":("注意事项："+reason+"若有事无法参与活动，请提前与我们联系，如一年内出现两次无故缺席将无法参与我们的活动。")):reason));
-
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
             return JsonResult.success("操作成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,12 +163,21 @@ public class ActivityStudentService {
             activityStudentDao.udpateHasCheck(id, "1");
             scoreTools.plusScoreByThread("活动签到得积分", as.getOpenid());
 
-            templateMessageTools.sendMessageByThread("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
+            /*templateMessageTools.sendMessageByThread("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
+                    TemplateMessageTools.field("学生姓名", as.getStuName()),
+                    TemplateMessageTools.field("活动名称", as.getActTitle()),
+                    TemplateMessageTools.field("活动地点", as.getAddress()),
+                    TemplateMessageTools.field("签到时间", NormalTools.curDate()),
+                    TemplateMessageTools.field("签到成功"));*/
+
+            SendMessageDto smd = new SendMessageDto("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
                     TemplateMessageTools.field("学生姓名", as.getStuName()),
                     TemplateMessageTools.field("活动名称", as.getActTitle()),
                     TemplateMessageTools.field("活动地点", as.getAddress()),
                     TemplateMessageTools.field("签到时间", NormalTools.curDate()),
                     TemplateMessageTools.field("签到成功"));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
+
             return JsonResult.success("签到成功");
         } catch (Exception e) {
             return JsonResult.error("出错了："+e.getMessage());

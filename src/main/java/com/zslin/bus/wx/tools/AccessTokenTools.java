@@ -43,7 +43,7 @@ public class AccessTokenTools {
         params.put("appid", config.getAppid());
         params.put("secret", config.getSecret());
         String result = InternetTools.doGet(TOKEN_URL, params);
-        //System.out.println("------result---->"+result);
+        System.out.println("------result---->"+result);
         return JsonTools.getJsonParam(result, "access_token");
     }
 

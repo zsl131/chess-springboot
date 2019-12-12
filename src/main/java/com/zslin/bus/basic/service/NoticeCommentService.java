@@ -11,13 +11,16 @@ import com.zslin.bus.basic.dao.INoticeCommentDao;
 import com.zslin.bus.basic.dao.INoticeDao;
 import com.zslin.bus.basic.model.NoticeComment;
 import com.zslin.bus.common.dto.QueryListDto;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
 import com.zslin.bus.wx.tools.WxAccountTools;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,9 @@ public class NoticeCommentService {
 
     @Autowired
     private TemplateMessageTools templateMessageTools;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
@@ -82,7 +88,11 @@ public class NoticeCommentService {
             sb.append("评论内容：").append(comment.getContent()).append("\\n")
                     .append("回复内容：").append(comment.getReply());
             //TODO 需要告知评论者
-            templateMessageTools.sendMessageByThread("评论回复", comment.getOpenid(), "#", "您的评论信息已得到回复", TemplateMessageTools.field("评论日期", comment.getCreateDay()), TemplateMessageTools.field("评论内容", comment.getContent()), TemplateMessageTools.field("回复内容", ac.getReply()));
+//            templateMessageTools.sendMessageByThread("评论回复", comment.getOpenid(), "#", "您的评论信息已得到回复", TemplateMessageTools.field("评论日期", comment.getCreateDay()), TemplateMessageTools.field("评论内容", comment.getContent()), TemplateMessageTools.field("回复内容", ac.getReply()));
+
+            SendMessageDto smd = new SendMessageDto("评论回复", comment.getOpenid(), "#", "您的评论信息已得到回复", TemplateMessageTools.field("评论日期", comment.getCreateDay()), TemplateMessageTools.field("评论内容", comment.getContent()), TemplateMessageTools.field("回复内容", ac.getReply()));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
+
             return JsonResult.success("回复成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +113,9 @@ public class NoticeCommentService {
             //TODO 需要通知管理员
             List<String> openids = wxAccountTools.getOpenid(WxAccountTools.ADMIN); //管理员Openid
 //            eventToolsThread.eventRemind(openids, "活动被评论", "评论提醒", NormalTools.curDate(), "/wx/activity/show?id="+objId, new EventRemarkDto("评论内容：", content));
-            templateMessageTools.sendMessageByThread("文章被评论提醒", openids, "#", "文章收到新评论", TemplateMessageTools.field("评论日期", obj.getCreateDay()), TemplateMessageTools.field("文章标题", obj.getNoticeTitle()), TemplateMessageTools.field("评论内容", obj.getContent()));
+            //templateMessageTools.sendMessageByThread("文章被评论提醒", openids, "#", "文章收到新评论", TemplateMessageTools.field("评论日期", obj.getCreateDay()), TemplateMessageTools.field("文章标题", obj.getNoticeTitle()), TemplateMessageTools.field("评论内容", obj.getContent()));
+            SendMessageDto smd = new SendMessageDto("文章被评论提醒", openids, "#", "文章收到新评论", TemplateMessageTools.field("评论日期", obj.getCreateDay()), TemplateMessageTools.field("文章标题", obj.getNoticeTitle()), TemplateMessageTools.field("评论内容", obj.getContent()));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
             return JsonResult.succ(obj);
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.zslin.bus.wx.tools;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.basic.tools.PinyinToolkit;
 import com.zslin.bus.wx.dao.ITemplateMessageRelationDao;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.dto.TempParamDto;
 import com.zslin.bus.wx.model.TemplateMessageRelation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,21 @@ public class TemplateMessageTools {
     @Autowired
     private EventTools eventTools;
 
-    public void sendMessageByThread(String templateName, List<String> toUsers, String url, String first, String ...keyValues) {
+    /*public void sendMessageByThread(String templateName, List<String> toUsers, String url, String first, String ...keyValues) {
         new Thread(()-> sendMessage(templateName, toUsers, url, first, keyValues)).start();
     }
 
     public void sendMessageByThread(String templateName, String toUser, String url, String first, String ...keyValues) {
         new Thread(() -> sendMessage(templateName, toUser, url, first, keyValues)).start();
+    }*/
+
+    public void sendMessageByDto(SendMessageDto dto) {
+        List<String> keys = dto.getKeyValues();
+        String [] key_array = new String[keys.size()];
+        for(int i=0;i<keys.size();i++) {
+            key_array[i] = keys.get(i);
+        }
+        sendMessage(dto.getTemplateName(), dto.getToUser(), dto.getUrl(), dto.getFirst(), key_array);
     }
 
     public void sendMessage(String templateName, List<String> toUsers, String url, String first, String... keyValues) {

@@ -313,7 +313,7 @@ public class EventTools {
 		} else if("40037".equals(errcode)) {
 			System.out.println("无效模板Id："+tempId);
 		}
-		System.out.println("WeixinXmlUtil=="+res);
+		System.out.println("EventTools=="+res);
 		return false;
 	}
 
@@ -331,7 +331,9 @@ public class EventTools {
 		String tempUrl = url;
 		if(tempUrl!=null && tempUrl.indexOf("{openid}")>=0) {tempUrl = tempUrl.replaceAll("\\{openid\\}", toUser);}
 
-		String postUrl = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token="+accessTokenTools.getAccessToken();
+		String token = accessTokenTools.getAccessToken();
+		System.out.println("-----EventTools Current Token :: "+token);
+		String postUrl = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token="+token;
 		String params = createTemplateMessageXml(toUser, tempId, tempUrl, topColor, paramList);
 		JSONObject jsonObj = WeixinUtil.httpRequest(postUrl, "POST", params);
 		String res = jsonObj==null?"":jsonObj.toString();

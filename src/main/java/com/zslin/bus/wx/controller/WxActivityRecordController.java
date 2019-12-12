@@ -1,18 +1,19 @@
 package com.zslin.bus.wx.controller;
 
-import com.zslin.basic.repository.SimplePageBuilder;
-import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.NormalTools;
-import com.zslin.basic.utils.ParamFilterUtil;
 import com.zslin.bus.basic.dao.*;
-import com.zslin.bus.basic.model.*;
+import com.zslin.bus.basic.model.ActivityRecord;
+import com.zslin.bus.basic.model.ActivityStudent;
+import com.zslin.bus.basic.model.Student;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.wx.dao.IWxAccountDao;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.model.WxAccount;
 import com.zslin.bus.wx.tools.ScoreTools;
 import com.zslin.bus.wx.tools.SessionTools;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +58,9 @@ public class WxActivityRecordController {
     @Autowired
     private TemplateMessageTools templateMessageTools;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /** 签到 */
     @GetMapping(value = "signIn")
     public String signIn(Model model, Integer recordId, String phone, HttpServletRequest request) {
@@ -82,12 +86,21 @@ public class WxActivityRecordController {
             activityStudentDao.udpateHasCheck(id, "1");
             scoreTools.plusScoreByThread("活动签到得积分", as.getOpenid());
 
-            templateMessageTools.sendMessageByThread("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
+            /*templateMessageTools.sendMessageByThread("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
+                    TemplateMessageTools.field("学生姓名", as.getStuName()),
+                    TemplateMessageTools.field("活动名称", as.getActTitle()),
+                    TemplateMessageTools.field("活动地点", as.getAddress()),
+                    TemplateMessageTools.field("签到时间", NormalTools.curDate()),
+                    TemplateMessageTools.field("签到成功"));*/
+
+            SendMessageDto smd = new SendMessageDto("活动签到通知", as.getOpenid(), "#", "您已成功签到了",
                     TemplateMessageTools.field("学生姓名", as.getStuName()),
                     TemplateMessageTools.field("活动名称", as.getActTitle()),
                     TemplateMessageTools.field("活动地点", as.getAddress()),
                     TemplateMessageTools.field("签到时间", NormalTools.curDate()),
                     TemplateMessageTools.field("签到成功"));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
+
             return "1";
         } catch (Exception e) {
             return "出错："+e.getMessage();

@@ -7,6 +7,7 @@ import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.common.dto.QueryListDto;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.finance.dao.IFinanceDetailDao;
@@ -21,9 +22,11 @@ import com.zslin.bus.finance.tools.TicketNoTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,9 @@ public class FinanceRecordService {
 
     @Autowired
     private TemplateMessageTools templateMessageTools;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
@@ -96,13 +102,22 @@ public class FinanceRecordService {
         if("1".equals(status)) {
             financeRecordDao.updateStatusByPass("1", name, verifyTime, id);
             //审核通过后发送财务通知
-            templateMessageTools.sendMessageByThread("对账单通知", buildFinanceOpenids(), "#", "有财务账单需要处理",
+            /*templateMessageTools.sendMessageByThread("对账单通知", buildFinanceOpenids(), "#", "有财务账单需要处理",
+                    TemplateMessageTools.field("对账单号", fr.getTicketNo()),
+                    TemplateMessageTools.field("帐单名称", fr.getRecordName()),
+                    TemplateMessageTools.field("消费笔数", fr.getDetailCount() + " 笔"),
+                    TemplateMessageTools.field("消费金额", fr.getAmount()+" 元"),
+                    TemplateMessageTools.field("生成时间", fr.getCreateTime()),
+                    TemplateMessageTools.field("请尽快核对处理"));*/
+
+            SendMessageDto smd = new SendMessageDto("对账单通知", buildFinanceOpenids(), "#", "有财务账单需要处理",
                     TemplateMessageTools.field("对账单号", fr.getTicketNo()),
                     TemplateMessageTools.field("帐单名称", fr.getRecordName()),
                     TemplateMessageTools.field("消费笔数", fr.getDetailCount() + " 笔"),
                     TemplateMessageTools.field("消费金额", fr.getAmount()+" 元"),
                     TemplateMessageTools.field("生成时间", fr.getCreateTime()),
                     TemplateMessageTools.field("请尽快核对处理"));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
         } else {
             financeRecordDao.updateStatusByInvalid("-1", reason, name, phone, verifyTime, id);
         }
@@ -209,13 +224,22 @@ public class FinanceRecordService {
         financeRecordDao.save(fr);
 
         //添加时发送财务通知请求审核
-        templateMessageTools.sendMessageByThread("对账单通知", buildVerifyOpenids(), "#", "有财务账单需要审核",
+        /*templateMessageTools.sendMessageByThread("对账单通知", buildVerifyOpenids(), "#", "有财务账单需要审核",
+                TemplateMessageTools.field("对账单号", fr.getTicketNo()),
+                TemplateMessageTools.field("帐单名称", fr.getRecordName()),
+                TemplateMessageTools.field("消费笔数", fr.getDetailCount() + " 笔"),
+                TemplateMessageTools.field("消费金额", fr.getAmount()+" 元"),
+                TemplateMessageTools.field("生成时间", fr.getCreateTime()),
+                TemplateMessageTools.field("请尽快登陆后台审核"));*/
+
+        SendMessageDto smd = new SendMessageDto("对账单通知", buildVerifyOpenids(), "#", "有财务账单需要审核",
                 TemplateMessageTools.field("对账单号", fr.getTicketNo()),
                 TemplateMessageTools.field("帐单名称", fr.getRecordName()),
                 TemplateMessageTools.field("消费笔数", fr.getDetailCount() + " 笔"),
                 TemplateMessageTools.field("消费金额", fr.getAmount()+" 元"),
                 TemplateMessageTools.field("生成时间", fr.getCreateTime()),
                 TemplateMessageTools.field("请尽快登陆后台审核"));
+        rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
 
         return JsonResult.success("保存成功");
     }

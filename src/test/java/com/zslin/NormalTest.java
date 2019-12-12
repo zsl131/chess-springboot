@@ -17,14 +17,17 @@ import com.zslin.bus.common.dto.QueryListConditionDto;
 import com.zslin.bus.common.dto.QueryListDto;
 import com.zslin.bus.common.iservice.IApiTokenService;
 import com.zslin.bus.common.model.ApiToken;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.*;
 import com.zslin.bus.qiniu.dto.MyPutRet;
 import com.zslin.bus.qiniu.tools.QiniuUploadTools;
 import com.zslin.bus.tools.ExportStudentTools;
 import com.zslin.bus.tools.JsonResult;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.tools.AccessTokenTools;
 import com.zslin.bus.wx.tools.InternetTools;
 import com.zslin.bus.wx.tools.JSApiTools;
+import com.zslin.bus.wx.tools.TemplateMessageTools;
 import com.zslin.bus.yard.dao.IClassSystemDetailDao;
 import com.zslin.bus.yard.dao.IGradeRoleSystemDao;
 import com.zslin.bus.yard.dao.ITeacherRoleDao;
@@ -37,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -101,6 +105,31 @@ public class NormalTest {
 
     @Autowired
     public IGradeRoleSystemDao gradeRoleSystemDao;
+
+    @Autowired
+    private TemplateMessageTools templateMessageTools;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Test
+    public void test35() {
+        SendMessageDto smd = new SendMessageDto("活动审核结果通知", "o4Jhl0nkSmiRIqU9JkWIm2lj6qXE", "/wx/activityRecord/signUp?recordId=", "标题",
+                TemplateMessageTools.field("活动主题", "活动主题"),
+                TemplateMessageTools.field("活动时间", "活动时间"),
+                TemplateMessageTools.field("审核结果", "驳回"),
+                TemplateMessageTools.field("注意事项：测试注意事项"));
+        rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
+    }
+
+    @Test
+    public void test34() {
+        /*templateMessageTools.sendMessageByThread("活动审核结果通知", "o4Jhl0nkSmiRIqU9JkWIm2lj6qXE", "/wx/activityRecord/signUp?recordId=", "标题",
+                TemplateMessageTools.field("活动主题", "活动主题"),
+                TemplateMessageTools.field("活动时间", "活动时间"),
+                TemplateMessageTools.field("审核结果", "驳回"),
+                TemplateMessageTools.field("注意事项：测试注意事项"));*/
+    }
 
     @Test
     public void test33() {

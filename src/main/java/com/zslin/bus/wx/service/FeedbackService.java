@@ -6,14 +6,17 @@ import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.DateTools;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.common.dto.QueryListDto;
+import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
 import com.zslin.bus.wx.dao.IFeedbackDao;
+import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.model.Feedback;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,9 @@ public class FeedbackService {
 
     @Autowired
     private TemplateMessageTools templateMessageTools;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
@@ -85,7 +91,10 @@ public class FeedbackService {
 
             //TODO 通知反馈者
 //            boolean result = eventToolsThread.eventRemind(f.getOpenid(), "回复反馈啦", "反馈回复", NormalTools.curDate(), reply, "#");
-            templateMessageTools.sendMessageByThread("反馈回复", f.getOpenid(), "#", "您的反馈信息已得到回复", TemplateMessageTools.field("反馈日期", f.getCreateDate()), TemplateMessageTools.field("反馈内容", f.getContent()), TemplateMessageTools.field("回复内容", reply));
+//            templateMessageTools.sendMessageByThread("反馈回复", f.getOpenid(), "#", "您的反馈信息已得到回复", TemplateMessageTools.field("反馈日期", f.getCreateDate()), TemplateMessageTools.field("反馈内容", f.getContent()), TemplateMessageTools.field("回复内容", reply));
+
+            SendMessageDto smd = new SendMessageDto("反馈回复", f.getOpenid(), "#", "您的反馈信息已得到回复", TemplateMessageTools.field("反馈日期", f.getCreateDate()), TemplateMessageTools.field("反馈内容", f.getContent()), TemplateMessageTools.field("回复内容", reply));
+            rabbitTemplate.convertAndSend(RabbitMQConfig.DIRECT_EXCHANGE, RabbitMQConfig.DIRECT_ROUTING, smd);
 
             return JsonResult.succ(f);
         } catch (NumberFormatException e) {

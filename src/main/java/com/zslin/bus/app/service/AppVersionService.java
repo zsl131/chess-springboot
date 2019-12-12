@@ -33,7 +33,7 @@ public class AppVersionService {
      * @return
      */
     public JsonResult checkUpdate(String params) {
-        System.out.println("=========>"+params);
+        //System.out.println("=========>"+params);
         String appid = JsonTools.getJsonParam(params, "appid");
         String version = JsonTools.getJsonParam(params, "version");
         AppVersion av = appVersionDao.loadOne();

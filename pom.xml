@@ -52,6 +52,11 @@
             <artifactId>commons-compress</artifactId>
             <version>1.12</version>
         </dependency>
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
         <!-- 拼音工具类 -->
         <dependency>
             <groupId>com.belerweb</groupId>
