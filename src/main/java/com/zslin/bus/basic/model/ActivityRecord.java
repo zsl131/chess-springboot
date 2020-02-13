@@ -68,6 +68,18 @@ public class ActivityRecord {
     @Column(name = "dep_name")
     private String depName;
 
+    /** 照片数量 */
+    @Column(name = "img_count")
+    private Integer imgCount = 0;
+
+    public Integer getImgCount() {
+        return imgCount;
+    }
+
+    public void setImgCount(Integer imgCount) {
+        this.imgCount = imgCount;
+    }
+
     public Integer getDepId() {
         return depId;
     }

@@ -28,4 +28,9 @@ public interface IActivityRecordDao extends BaseRepository<ActivityRecord, Integ
     Integer queryCountByActivity(Integer actId);
 
     List<ActivityRecord> findByActId(Integer actId);
+
+    @Query("UPDATE ActivityRecord a SET a.imgCount=a.imgCount+?1 WHERE a.id=?2 ")
+    @Modifying
+    @Transactional
+    void plusImgCount(Integer count, Integer id);
 }
