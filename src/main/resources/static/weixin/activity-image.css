@@ -1,0 +1,38 @@
+.image-header-div {
+    margin-top: 12px; width: 90%; margin-left: 5%; height: 35px; line-height: 35px; display: inline-flex; background:#eee; border-radius: 5px; padding: 1px 2px;
+}
+.image-header-div a {
+    flex: 1; text-align:center; color:#f58d15; border-radius: 5px;
+}
+.image-header-div a.current {
+    background:#f58d15; color:#FFF;
+}
+
+.image-content-main {
+    width:94%; margin-left: 3%; margin-top: 12px; display: inline-flex;
+}
+.image-content-left {
+    flex: 1;
+}
+.image-content-right {
+    flex: 1;
+}
+
+
+.single-activity-image {
+    width: 98%; padding: 5px 1%; border:1px #e5e5e5 solid; background:#FAFAFA; margin: 8px 0.5%; display: inline-block;
+}
+.single-activity-image img {
+    width: 100%;
+}
+.single-activity-image p {
+    width:100%; text-align:center; margin-top: 5px;
+}
+
+.single-activity-record {
+    width:100%; padding: 8px 8px 8px 15px; margin-top: 6px; border-bottom: 1px #dedede dotted;
+}
+
+.single-activity-record b {
+    font-weight: normal; color:#999; padding-right: 4px;
+}

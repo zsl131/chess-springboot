@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>奇思教育-活动影集</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-image.css"/>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <div class="image-header-div">
+                <a href="/weixin/recordImage" th:class="${current==1?'current':''}">活动影集</a>
+                <a href="/weixin/recordImage/listRecord" th:class="${current==2?'current':''}">活动记录</a>
+            </div>
+            <div class="image-content-main">
+                <div class="image-content-left">
+                    <div th:each="obj : ${data2}" th:remove="tag">
+                        <div class="single-activity-image">
+                            <img th:src="${obj.imgUrl}"/>
+                            <a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-content-right">
+                    <div th:each="obj : ${data1}" th:remove="tag">
+                        <div class="single-activity-image">
+                            <img th:src="${obj.imgUrl}"/>
+                            <a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>
+        </div>
+    </div>
+</body>
+</html>
