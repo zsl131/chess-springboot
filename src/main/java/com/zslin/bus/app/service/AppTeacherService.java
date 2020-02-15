@@ -7,12 +7,10 @@ import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.ClassSystem;
 import com.zslin.bus.yard.model.ClassTag;
-import com.zslin.bus.yard.model.Grade;
 import com.zslin.bus.yard.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,42 +83,6 @@ public class AppTeacherService {
 
         return JsonResult.success("获取成功").set("datas", list);
     }
-
-    /** 获取可管理的年级 */
-    /*public JsonResult loadGrade(String params) {
-        String phone = JsonTools.getJsonParam(params, "phone"); //必须包含Phone
-        String type = JsonTools.getJsonParam(params, "type"); //类型，即是否是标签
-        Integer tagId = null;
-        try { tagId = Integer.parseInt(JsonTools.getJsonParam(params, "tagId")); } catch (Exception e) { }
-        String isTest = teacherDao.queryIsTest(phone); //是否为测试教师
-        List<Grade> list = null;
-        if(type!=null && "tag".equalsIgnoreCase(type)) {
-            ClassTag tag = null;
-            if(tagId!=null && tagId>0) {tag = classTagDao.findOne(tagId);}
-            list = new ArrayList<>();
-            Grade g = new Grade();
-            g.setName(tag==null?"标签课程":"课程库["+tag.getName()+"]");
-            g.setId(-2); g.setOrderNo(-2);
-            list.add(g);
-        } else {
-            if(!"1".equals(isTest)) { //不是测试教师
-                list = teacherGradeDao.findGradeByPhone(phone, SimpleSortBuilder.generateSort("orderNo"));
-            }
-            if(list==null) {list = new ArrayList<>();}
-            if("1".equals(isTest)) { //如果是测试教师
-                Grade g = new Grade();
-                g.setName("测试教师用户");
-                g.setId(-1); g.setOrderNo(-1);
-                list.add(g);
-            }
-            Grade g = new Grade();
-            g.setName("访问历史");
-            g.setId(0); g.setOrderNo(0);
-            list.add(g);
-        }
-
-        return JsonResult.success("获取成功").set("datas", list);
-    }*/
 
     /**
      * 修改密码

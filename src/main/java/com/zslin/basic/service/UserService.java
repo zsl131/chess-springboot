@@ -24,7 +24,10 @@ import com.zslin.bus.common.annotations.ApiCodeClass;
 import com.zslin.bus.common.dto.QueryListDto;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
+import com.zslin.bus.common.tools.TeacherLoginTools;
 import com.zslin.bus.tools.JsonResult;
+import com.zslin.bus.yard.dao.ITeacherDao;
+import com.zslin.bus.yard.model.ClassSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -53,6 +56,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private IOtherLoginDao otherLoginDao;
+
+    @Autowired
+    private TeacherLoginTools teacherLoginTools;
 
     @AdminAuth(name = "用户列表", orderNum = 1)
     public JsonResult listUser(String params) {
@@ -140,7 +146,11 @@ public class UserService implements IUserService {
             LoginDto loginDto = loginTools.buildAuthMenus(user.getId());
             loginDto.setUser(user);
 
-            return JsonResult.succ(loginDto);
+            JsonResult result = teacherLoginTools.teacherLogin(username);
+
+            result.set("obj", loginDto);
+            return result;
+//            return JsonResult.succ(loginDto);
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.error(e.getMessage());

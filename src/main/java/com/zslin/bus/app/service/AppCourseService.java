@@ -79,18 +79,18 @@ public class AppCourseService {
             SimpleSpecificationBuilder ssb = new SimpleSpecificationBuilder("teaPhone", "eq", phone);
             Page<CourseRecord> data = courseRecordDao.findAll(ssb.generate(), SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("lastLong_d")));
 //            System.out.println("----------->length::"+data.getTotalElements());
-            result.set("data", data.getContent());
+            result.set("data", data.getContent()).set("size", data.getTotalElements());
         } else if(gid==-1) { //如果是测试教师
             SimpleSpecificationBuilder ssb = new SimpleSpecificationBuilder("showTest", "eq", "1");
             Page<ClassCourse> data = classCourseDao.findAll(ssb.generate(), SimplePageBuilder.generate(page));
-            result.set("data", data.getContent());
+            result.set("data", data.getContent()).set("size", data.getTotalElements());
         } else if(gid==-2) { //如果是属于标签课程
             List<ClassCourse> courseList = classCourseDao.findByTagId(tagId);
-            result.set("data", courseList);
+            result.set("data", courseList).set("size", courseList.size());
         } else {
             SimpleSpecificationBuilder ssb = new SimpleSpecificationBuilder("sid", "eq", gid);
             Page<ClassSystemDetail> datas = classSystemDetailDao.findAll(ssb.generate(), SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("orderNo", "sectionNo")));
-            result.set("data", buildData(datas.getContent()));
+            result.set("data", buildData(datas.getContent())).set("size", datas.getTotalElements());
         }
         result.set("gid", gid);
         return result;
@@ -120,6 +120,9 @@ public class AppCourseService {
     public JsonResult loadCourse(String params) {
         Integer cid = Integer.parseInt(JsonTools.getJsonParam(params, "cid")); //Course ID
         String teaPhone = JsonTools.getHeaderParams(params, "phone"); //教师电话
+        if(teaPhone==null || "".equals(teaPhone)) {
+            teaPhone = JsonTools.getJsonParam(params, "phone");
+        }
         Integer page = 0;
         try { page = Integer.parseInt(JsonTools.getJsonParam(params, "page")); } catch (Exception e) { } //页码
 
