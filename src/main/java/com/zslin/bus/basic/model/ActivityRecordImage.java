@@ -28,6 +28,14 @@ public class ActivityRecordImage {
     @Column(name = "record_id")
     private Integer recordId;
 
+    /** 活动开展时间 */
+    @Column(name = "record_hold_time")
+    private String recordHoldTime;
+
+    /** 活动开展地点 */
+    @Column(name = "record_address")
+    private String recordAddress;
+
     public Integer getId() {
         return id;
     }
@@ -74,5 +82,21 @@ public class ActivityRecordImage {
 
     public void setRecordId(Integer recordId) {
         this.recordId = recordId;
+    }
+
+    public String getRecordHoldTime() {
+        return recordHoldTime;
+    }
+
+    public void setRecordHoldTime(String recordHoldTime) {
+        this.recordHoldTime = recordHoldTime;
+    }
+
+    public String getRecordAddress() {
+        return recordAddress;
+    }
+
+    public void setRecordAddress(String recordAddress) {
+        this.recordAddress = recordAddress;
     }
 }

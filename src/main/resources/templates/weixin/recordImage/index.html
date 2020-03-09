@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>奇思教育-活动影集</title>
     <link type="text/css" rel="stylesheet" href="/weixin/activity-image.css"/>
+    <script type="text/javascript" src="/weixin/activity-image.js"></script>
 </head>
 
 <body>
@@ -17,25 +18,38 @@
                 <a href="/weixin/recordImage" th:class="${current==1?'current':''}">活动影集</a>
                 <a href="/weixin/recordImage/listRecord" th:class="${current==2?'current':''}">活动记录</a>
             </div>
-            <div class="image-content-main">
-                <div class="image-content-left">
-                    <div th:each="obj : ${data2}" th:remove="tag">
-                        <div class="single-activity-image">
-                            <img th:src="${obj.imgUrl}"/>
-                            <a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>
-                        </div>
+            <div id="image-mask-div">
+                <div class="image-mask-img"><img src="/publicFile/upload/20200308/d0876838-a936-4491-837d-506a1a022dc0.jpg"/></div>
+                <div class="image-mask-operate">
+                    <div class="pre-btn"></div>
+                    <div class="ope-content">
+                        <div class="title">这里是标题</div>
+                        <div class="date">2020-3-9</div>
                     </div>
-                </div>
-                <div class="image-content-right">
-                    <div th:each="obj : ${data1}" th:remove="tag">
-                        <div class="single-activity-image">
-                            <img th:src="${obj.imgUrl}"/>
-                            <a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>
-                        </div>
-                    </div>
+                    <div class="next-btn"></div>
                 </div>
             </div>
-            <div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>
+            <div class="image-content-main-div">
+                <div class="image-content-main">
+                    <div class="image-content-left">
+                        <div th:each="obj,objStat : ${data2}" th:remove="tag">
+                            <div class="single-activity-image">
+                                <img th:src="${obj.imgUrl}" th:attr="imgCount='index_left_'+${objStat.count}, title=${obj.title}, holdTime=${obj.recordHoldTime}, recordId=${obj.recordId}"/>
+                                <!--<a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-content-right">
+                        <div th:each="obj,objStat : ${data1}" th:remove="tag">
+                            <div class="single-activity-image">
+                                <img th:src="${obj.imgUrl}" th:attr="imgCount='index_right_'+${objStat.count}, title=${obj.title}, holdTime=${obj.recordHoldTime}, recordId=${obj.recordId}"/>
+                                <!--<a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>
+            </div>
         </div>
     </div>
 </body>

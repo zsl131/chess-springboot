@@ -39,7 +39,7 @@ public class TeacherRoleTools {
             u = new User();
             u.setNickname(teacher.getName());
             try {
-                u.setPassword(SecurityUtil.md5(phone,phone));
+                u.setPassword(SecurityUtil.md5(phone,phone.substring(phone.length()-6)));
             } catch (Exception e) {
             }
             u.setIsAdmin("0");

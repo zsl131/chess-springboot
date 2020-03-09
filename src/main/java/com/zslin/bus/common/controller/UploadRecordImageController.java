@@ -44,7 +44,7 @@ public class UploadRecordImageController {
      * @throws IOException
      */
     @RequestMapping(value = "recordImage")
-    public List<ActivityRecordImage> uploadFile(@RequestParam("file")MultipartFile[] multipartFile, Integer recordId, Integer actId, String actTitle) throws IOException {
+    public List<ActivityRecordImage> uploadFile(@RequestParam("file")MultipartFile[] multipartFile, Integer recordId, Integer actId, String actTitle, String holdTime, String address) throws IOException {
 //        System.out.println("======="+path+"=====length:"+multipartFile.length);
 //        System.out.println("recordId::"+recordId+"=========actID::"+actId+"=======title: "+actTitle);
         List<ActivityRecordImage> result = new ArrayList<>();
@@ -73,6 +73,8 @@ public class UploadRecordImageController {
                     ari.setImgUrl(imageUrl);
                     ari.setRecordId(recordId);
                     ari.setTitle(actTitle);
+                    ari.setRecordAddress(address);
+                    ari.setRecordHoldTime(holdTime);
                     activityRecordImageDao.save(ari);
                     result.add(ari);
                     count++;
