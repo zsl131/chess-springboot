@@ -3,7 +3,21 @@ $(function() {
     $(".single-activity-image>img").click(function() {
         buildMaskImage($(this));
     });
+
+    $("#image-mask-div").on("swipeleft",function(){
+        const target = $(this).find(".image-mask-img").attr("preCount");
+        onOpt("pre", target);
+     // console.log("------left::"+target)
+      //console.log(e)
+    });
+    $("#image-mask-div").on("swiperight",function(){
+        const target = $(this).find(".image-mask-img").attr("nextCount");
+        onOpt("next", target);
+        //console.log("------right::"+target)
+        //console.log(e)
+    });
 });
+
 
 function buildMaskImage(obj) {
     const imgUrl = $(obj).attr("src");
@@ -35,7 +49,7 @@ function buildMaskImage(obj) {
 
 function buildHtml(imgUrl, preCount, nextCount, title, date, recordId) {
     var html = '' +
-        '<div class="image-mask-img"><img onClick="onOpt(\'img\', \'\')" src="'+imgUrl+'"/></div>'+
+        '<div class="image-mask-img" preCount="'+preCount+'" nextCount="'+nextCount+'"><img onClick="onOpt(\'img\', \'\')" src="'+imgUrl+'"/></div>'+
         '<div class="image-mask-operate">'+
             '<div class="pre-btn" onClick="onOpt(\'pre\', \''+preCount+'\')"></div>'+
             '<div class="ope-content">'+
@@ -57,12 +71,12 @@ function onOpt(flag, target) {
     } else if(flag=='detail') {
         window.location.href = '/weixin/recordImage?recordId='+target;
     }
-    console.log(flag, target);
+    //console.log(flag, target);
 }
 
 function findTarget(target) {
     const obj = $("img[imgCount='"+target+"']");
-    console.log($(obj).attr("src"));
+    //console.log($(obj).attr("src"));
     if($(obj).attr("src")) {
         buildMaskImage(obj);
     } else {

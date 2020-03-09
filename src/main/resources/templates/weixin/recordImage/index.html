@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>奇思教育-活动影集</title>
     <link type="text/css" rel="stylesheet" href="/weixin/activity-image.css"/>
+    <script type="text/javascript" src="/weixin/mobile/jquery.mobile-1.4.5.min.js"></script>
     <script type="text/javascript" src="/weixin/activity-image.js"></script>
 </head>
 
@@ -18,7 +19,7 @@
                 <a href="/weixin/recordImage" th:class="${current==1?'current':''}">活动影集</a>
                 <a href="/weixin/recordImage/listRecord" th:class="${current==2?'current':''}">活动记录</a>
             </div>
-            <div id="image-mask-div">
+            <div id="image-mask-div" data-role="page">
                 <div class="image-mask-img"><img src="/publicFile/upload/20200308/d0876838-a936-4491-837d-506a1a022dc0.jpg"/></div>
                 <div class="image-mask-operate">
                     <div class="pre-btn"></div>
