@@ -4,17 +4,16 @@ $(function() {
         buildMaskImage($(this));
     });
 
-    $("#image-mask-div").on("swipeleft",function(){
-        const target = $(this).find(".image-mask-img").attr("preCount");
-        onOpt("pre", target);
-     // console.log("------left::"+target)
-      //console.log(e)
-    });
-    $("#image-mask-div").on("swiperight",function(){
-        const target = $(this).find(".image-mask-img").attr("nextCount");
-        onOpt("next", target);
-        //console.log("------right::"+target)
-        //console.log(e)
+    $("#image-mask-div").swipe({
+        swipe:function(event, direction, distance, duration, fingerCount, fingerData)                     {
+          if(direction=='right') {
+            const target = $(this).find(".image-mask-img").attr("preCount");
+            onOpt("pre", target);
+          } else if(direction=='left') {
+            const target = $(this).find(".image-mask-img").attr("nextCount");
+            onOpt("next", target);
+           }
+        }
     });
 });
 
@@ -48,8 +47,10 @@ function buildMaskImage(obj) {
 }
 
 function buildHtml(imgUrl, preCount, nextCount, title, date, recordId) {
+    date = date?date:'';
     var html = '' +
-        '<div class="image-mask-img" preCount="'+preCount+'" nextCount="'+nextCount+'"><img onClick="onOpt(\'img\', \'\')" src="'+imgUrl+'"/></div>'+
+        '<div class="image-mask-img" preCount="'+preCount+'" nextCount="'+nextCount+'">'+
+        '<span class="image-mask-span"><img onClick="onOpt(\'img\', \'\')" src="'+imgUrl+'"/></span></div>'+
         '<div class="image-mask-operate">'+
             '<div class="pre-btn" onClick="onOpt(\'pre\', \''+preCount+'\')"></div>'+
             '<div class="ope-content">'+
