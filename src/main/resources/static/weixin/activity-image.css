@@ -44,11 +44,11 @@
     touch-action: none;
 }
 .image-mask-img {
-    padding: 10px; height: 92%; webkit-justify-content: center;
-    display: table;
+    padding: 0px 2px; webkit-justify-content: center;
+    display: table; width:100%;
 }
 .image-mask-span {
-    display: table-cell; vertical-align: middle;
+    display: table-cell; vertical-align: middle; width:100%;
 }
 
 .image-mask-img img {

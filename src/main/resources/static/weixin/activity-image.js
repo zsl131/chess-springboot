@@ -15,8 +15,16 @@ $(function() {
            }
         }
     });
+
+    setImageContainerHeight();
 });
 
+function setImageContainerHeight() {
+    const height = $(window).height();
+    //console.log(height)
+    //console.log($(".image-mask-img").height())
+    $(".image-mask-img").height((height-45)+"px");
+}
 
 function buildMaskImage(obj) {
     const imgUrl = $(obj).attr("src");
@@ -44,13 +52,14 @@ function buildMaskImage(obj) {
     //console.log(html)
 
     showImage(html);
+    setImageContainerHeight();
 }
 
 function buildHtml(imgUrl, preCount, nextCount, title, date, recordId) {
     date = date?date:'';
     var html = '' +
-        '<div class="image-mask-img" preCount="'+preCount+'" nextCount="'+nextCount+'">'+
-        '<span class="image-mask-span"><img onClick="onOpt(\'img\', \'\')" src="'+imgUrl+'"/></span></div>'+
+        '<div class="image-mask-img" onClick="onOpt(\'img\', \'\')" preCount="'+preCount+'" nextCount="'+nextCount+'">'+
+        '<span class="image-mask-span"><img src="'+imgUrl+'"/></span></div>'+
         '<div class="image-mask-operate">'+
             '<div class="pre-btn" onClick="onOpt(\'pre\', \''+preCount+'\')"></div>'+
             '<div class="ope-content">'+
