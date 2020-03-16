@@ -93,6 +93,7 @@ public class ApiController {
 
     @RequestMapping(value = "queryOrSubmit")
     public JsonResult queryOrSubmit(HttpServletRequest request, HttpServletResponse response) {
+
         String token = request.getHeader("auth-token"); //身份认证token
         String apiCode = request.getHeader("api-code"); //接口访问编码
         if(token == null || "".equals(token) || apiCode==null || "".equals(apiCode)) {

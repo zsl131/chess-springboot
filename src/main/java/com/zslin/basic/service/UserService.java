@@ -128,6 +128,7 @@ public class UserService implements IUserService {
     }
 
     public JsonResult login(String params) {
+System.out.println("UserService:: "+params);
         try {
             String username = JsonTools.getJsonParam(params, "username");
             String password = JsonTools.getJsonParam(params, "password");

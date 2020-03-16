@@ -28,9 +28,11 @@ import com.zslin.bus.wx.tools.AccessTokenTools;
 import com.zslin.bus.wx.tools.InternetTools;
 import com.zslin.bus.wx.tools.JSApiTools;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
+import com.zslin.bus.yard.dao.IClassImageDao;
 import com.zslin.bus.yard.dao.IClassSystemDetailDao;
 import com.zslin.bus.yard.dao.IGradeRoleSystemDao;
 import com.zslin.bus.yard.dao.ITeacherRoleDao;
+import com.zslin.bus.yard.model.ClassImage;
 import com.zslin.bus.yard.model.ClassSystemDetail;
 import com.zslin.bus.yard.model.Grade;
 import com.zslin.bus.yard.tools.MyFileTools;
@@ -111,6 +113,18 @@ public class NormalTest {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private IClassImageDao classImageDao;
+
+    @Test
+    public void test36() {
+        List<ClassImage> list = classImageDao.findByTea("15925061256", "2020", 1, SimpleSortBuilder.generateSort("id"));
+        System.out.println("-----------size::: "+list.size());
+        for(ClassImage c : list) {
+            System.out.println(c);
+        }
+    }
 
     @Test
     public void test35() {
