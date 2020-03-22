@@ -57,6 +57,50 @@ public class ClassImage {
     /** 状态，1-显示；0-不显示 */
     private String status;
 
+    @Lob
+    private String reply;
+
+    @Column(name = "reply_date")
+    private String replyDate;
+
+    @Column(name = "reply_time")
+    private String replyTime;
+
+    @Column(name = "reply_long")
+    private Long replyLong;
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public String getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(String replyDate) {
+        this.replyDate = replyDate;
+    }
+
+    public String getReplyTime() {
+        return replyTime;
+    }
+
+    public void setReplyTime(String replyTime) {
+        this.replyTime = replyTime;
+    }
+
+    public Long getReplyLong() {
+        return replyLong;
+    }
+
+    public void setReplyLong(Long replyLong) {
+        this.replyLong = replyLong;
+    }
+
     public Integer getCourseId() {
         return courseId;
     }

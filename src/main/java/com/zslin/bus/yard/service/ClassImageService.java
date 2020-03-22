@@ -4,6 +4,7 @@ import com.zslin.basic.annotations.AdminAuth;
 import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.repository.SpecificationOperator;
+import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.common.dto.QueryListDto;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
@@ -37,5 +38,24 @@ public class ClassImageService {
                 SimplePageBuilder.generate(qld.getPage(), qld.getSize(), SimpleSortBuilder.generateSort(qld.getSort())));
 
         return JsonResult.getInstance().set("size", res.getTotalElements()).set("data", res.getContent());
+    }
+
+    public JsonResult reply(String params) {
+        try {
+            Integer id = JsonTools.getId(params);
+            String reply = JsonTools.getJsonParam(params, "reply");
+
+            ClassImage ci = classImageDao.findOne(id);
+            ci.setReply(reply);
+            ci.setReplyDate(NormalTools.curDate("yyyy-MM-dd"));
+            ci.setReplyTime(NormalTools.curDatetime());
+            ci.setReplyLong(System.currentTimeMillis());
+
+            classImageDao.save(ci);
+
+            return JsonResult.success("点评成功");
+        } catch (Exception e) {
+            return JsonResult.error(e.getMessage());
+        }
     }
 }
