@@ -43,6 +43,17 @@ public class ClassComment {
     @Lob
     private String content;
 
+    @Column(name = "file_type")
+    private String fileType;
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
     public Integer getId() {
         return id;
     }

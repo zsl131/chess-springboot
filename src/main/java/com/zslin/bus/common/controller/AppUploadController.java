@@ -169,6 +169,7 @@ public class AppUploadController {
                 cc.setSchId(tea.getSchoolId());
                 cc.setSchName(tea.getSchoolName());
                 cc.setTeaId(tea.getId());
+                cc.setFileType(type);
                 cc.setTeaName(tea.getName());
                 cc.setTeaPhone(tea.getPhone());
                 cc.setContent(content);
