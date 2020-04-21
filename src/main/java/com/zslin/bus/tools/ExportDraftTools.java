@@ -27,7 +27,7 @@ public class ExportDraftTools {
     private static final String FIELD_SPE = "__";
 
     static {
-        columnName = new String [] {"作者", "标题", "引导", "内容", "修改时间", "添加时间"};
+        columnName = new String [] {"作者", "录制", "标题", "引导", "内容", "修改时间", "添加时间"};
     }
 
     /** 获取Get方法 */
@@ -177,7 +177,7 @@ public class ExportDraftTools {
 
         //将查询出的数据设置到sheet对应的单元格中
         for (int i = 0; i < data.size(); i++) {
-            //"作者", "标题", "引导", "内容", "修改时间", "添加时间"
+            //"作者", "录制", "标题", "引导", "内容", "修改时间", "添加时间"
             Draft obj = data.get(i);//遍历每个对象
             XSSFRow row = sheet.createRow(i + 3);//创建所需的行数
 
@@ -185,11 +185,12 @@ public class ExportDraftTools {
                 XSSFCell cell = row.createCell(j, XSSFCell.CELL_TYPE_STRING);//设置单元格的数据类型
                 //第一列为数字类型并设置单元格的值
                 if (j == 0) { cell.setCellValue(obj.getAuthorName()); }
-                else if(j==1) {cell.setCellValue(obj.getTitle());}
-                else if(j==2) {cell.setCellValue(obj.getGuide());}
-                else if(j==3) {cell.setCellValue(obj.getContent());}
-                else if(j==4) {cell.setCellValue(obj.getUpdateTime());}
-                else if(j==5) {cell.setCellValue(obj.getCreateTime());}
+                else if(j==1) {cell.setCellValue("1".equals(obj.getHasProcess())?"是":"否");}
+                else if(j==2) {cell.setCellValue(obj.getTitle());}
+                else if(j==3) {cell.setCellValue(obj.getGuide());}
+                else if(j==4) {cell.setCellValue(obj.getContent());}
+                else if(j==5) {cell.setCellValue(obj.getUpdateTime());}
+                else if(j==6) {cell.setCellValue(obj.getCreateTime());}
                 cell.setCellStyle(style); //设置单元格样式
             }
         }

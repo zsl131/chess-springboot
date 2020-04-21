@@ -57,6 +57,17 @@ public class Draft {
     @Column(name = "author_id")
     private Integer authorId;
 
+    @Column(name = "has_process")
+    private String hasProcess="0";
+
+    public String getHasProcess() {
+        return hasProcess;
+    }
+
+    public void setHasProcess(String hasProcess) {
+        this.hasProcess = hasProcess;
+    }
+
     public Integer getUpdateDate() {
         return updateDate;
     }
