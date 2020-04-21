@@ -104,13 +104,29 @@ public class SimpleSpecification<T> implements Specification<T> {
         if(EQUAL.equalsIgnoreCase(op.getOper())) {
             return criteriaBuilder.equal(root.get(op.getKey()),op.getValue());
         } else if(GRATE_EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.ge(root.get(op.getKey()), (Number)op.getValue());
+            try {
+                return criteriaBuilder.ge(root.get(op.getKey()), getNumberVal(op.getValue()));
+            } catch (Exception e) {
+                return null;
+            }
         } else if(LESS_EQUAL.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.le(root.get(op.getKey()),(Number)op.getValue());
+            try {
+                return criteriaBuilder.le(root.get(op.getKey()), getNumberVal(op.getValue()));
+            } catch (Exception e) {
+                return null;
+            }
         } else if(GRATE_THEN.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.gt(root.get(op.getKey()),(Number)op.getValue());
+            try {
+                return criteriaBuilder.gt(root.get(op.getKey()), getNumberVal(op.getValue()));
+            } catch (Exception e) {
+                return null;
+            }
         } else if(LESS_THEN.equalsIgnoreCase(op.getOper())) {
-            return criteriaBuilder.lt(root.get(op.getKey()),(Number)op.getValue());
+            try {
+                return criteriaBuilder.lt(root.get(op.getKey()), getNumberVal(op.getValue()));
+            } catch (Exception e) {
+                return null;
+            }
         } else if(LIKE.equalsIgnoreCase(op.getOper()) || LIKE_BEGIN_END.equalsIgnoreCase(op.getOper())) {
             return criteriaBuilder.like(root.get(op.getKey()),"%"+op.getValue()+"%");
         } else if(LIKE_BEGIN.equalsIgnoreCase(op.getOper())) {
@@ -133,5 +149,9 @@ public class SimpleSpecification<T> implements Specification<T> {
             return root.get(op.getKey()).in((Object[])op.getValue());
         }
         return null;
+    }
+
+    private Number getNumberVal(Object val) {
+        return Long.parseLong(val.toString());
     }
 }
