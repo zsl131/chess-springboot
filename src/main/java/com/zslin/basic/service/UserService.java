@@ -26,8 +26,6 @@ import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.common.tools.TeacherLoginTools;
 import com.zslin.bus.tools.JsonResult;
-import com.zslin.bus.yard.dao.ITeacherDao;
-import com.zslin.bus.yard.model.ClassSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -111,7 +109,7 @@ public class UserService implements IUserService {
 
     @AdminAuth(name = "删除用户", orderNum = 3)
     public JsonResult deleteUser(String params) {
-        System.out.println("params:::"+params);
+        //System.out.println("params:::"+params);
         try {
             Integer id = Integer.parseInt(JsonTools.getJsonParam(params, "id"));
             User u = userDao.findOne(id);
@@ -128,7 +126,7 @@ public class UserService implements IUserService {
     }
 
     public JsonResult login(String params) {
-System.out.println("UserService:: "+params);
+//System.out.println("UserService:: "+params);
         try {
             String username = JsonTools.getJsonParam(params, "username");
             String password = JsonTools.getJsonParam(params, "password");
@@ -199,7 +197,7 @@ System.out.println("UserService:: "+params);
 
     @AdminAuth(name = "分配用户角色", orderNum = 5)
     public JsonResult authRole(String params) {
-        System.out.println(params);
+       // System.out.println(params);
         try {
             Integer uid = Integer.parseInt(JsonTools.getJsonParam(params, "uid"));
             userRoleDao.deleteByUserId(uid); //先删除所有权限
