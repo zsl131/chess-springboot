@@ -67,7 +67,7 @@ public class WeixinJsController {
         result =  InternetTools.doGet(requestUrl+params, null);
         //System.out.println("-----WeixinJsController++++++++++"+result);
         String jsapi_ticket = JSONObject.parseObject(result).getString("ticket");
-        int activeTime=Integer.parseInt(JSONObject.parseObject(result).getString("expires_in"));
+        //int activeTime=Integer.parseInt(JSONObject.parseObject(result).getString("expires_in"));
 //        Jssdk jssdk = new Jssdk();
 //        jssdk.setActiveTime(activeTime-600);
 //        jssdk.setJsapiTicket(jsapi_ticket);

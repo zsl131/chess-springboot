@@ -36,6 +36,12 @@ public class WxActivityController {
     @Autowired
     private IActivityDao activityDao;
 
+    @GetMapping(value = "current")
+    public String current(Model model, HttpServletRequest request) {
+        Integer id = activityDao.findCurrentId();
+        return "redirect:/wx/activity/show?id="+id;
+    }
+
     @GetMapping(value = "index")
     public String index(Model model, Integer page, HttpServletRequest request) {
         Page<Activity> datas = activityDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),

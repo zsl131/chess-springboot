@@ -41,5 +41,9 @@ public interface IActivityDao extends BaseRepository<Activity, Integer>, JpaSpec
     @Query("SELECT COUNT(a.id) FROM Activity a WHERE a.recordCount=0")
     Integer recordCountZero();
 
+    /** 获取当前活动 */
+    @Query("SELECT MAX(a.id) FROM Activity a WHERE a.status='1' ")
+    Integer findCurrentId();
+
 //    List<Activity> listNew();
 }
