@@ -1,6 +1,8 @@
 package com.zslin.bus.wx.controller;
 
 import com.zslin.bus.wx.tools.SessionTools;
+import com.zslin.test.ImageHandleTools;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "wx/test")
 public class WxTestController {
+
+    @Autowired
+    private ImageHandleTools imageHandleTools;
+
+    @GetMapping(value = "processImage")
+    public @ResponseBody String processImage(Integer w) throws Exception {
+        imageHandleTools.process(w);
+        return "----------";
+    }
 
     @RequestMapping(value = "index")
     public String index(Model model, String msg, HttpServletRequest request) {

@@ -36,6 +36,7 @@ import com.zslin.bus.yard.model.ClassImage;
 import com.zslin.bus.yard.model.ClassSystemDetail;
 import com.zslin.bus.yard.model.Grade;
 import com.zslin.bus.yard.tools.MyFileTools;
+import com.zslin.test.ImageHandleTools;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -116,6 +117,14 @@ public class NormalTest {
 
     @Autowired
     private IClassImageDao classImageDao;
+
+    @Autowired
+    private ImageHandleTools imageHandleTools;
+
+    @Test
+    public void test37() throws Exception {
+        imageHandleTools.process(500);
+    }
 
     @Test
     public void test36() {
