@@ -25,6 +25,7 @@ public class ImageHandleTools {
 
     public void process(Integer width) throws Exception {
         File outFile = new File(configTools.getUploadPath(UPLOAD_PATH_PRE));
+        System.out.println("---------->"+outFile.getAbsolutePath());
         width = width==null?500:width;
         File [] files = outFile.listFiles();
         for(File f : files) {
