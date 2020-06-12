@@ -17,6 +17,7 @@ public class TestController {
     @GetMapping(value = "processImage")
     public @ResponseBody
     String processImage(Integer w) throws Exception {
+        System.out.println("starting---------->"+w);
         imageHandleTools.process(w);
         return "----------";
     }
