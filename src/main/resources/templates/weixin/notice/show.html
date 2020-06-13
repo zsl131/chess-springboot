@@ -15,6 +15,8 @@
     <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
     <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
     <script type="text/javascript" src="/weixin/weixin-share.js"></script>
+
+    <script type="text/javascript" src="/weixin/check-images.js"></script>
 </head>
 
 <body>
@@ -39,7 +41,7 @@
                 <input th:value="${notice.picPath}" type="hidden" class="imgUrl"/>
                 <script src='https://vjs.zencdn.net/7.5.5/video.js'></script>
             </div>
-            <div class="content" th:utext="${notice.content}"></div>
+            <div class="check-images content" th:utext="${notice.content}"></div>
         </div>
     </div>
 </body>

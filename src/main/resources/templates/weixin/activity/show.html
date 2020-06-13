@@ -11,6 +11,7 @@
     <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js" language="JavaScript"></script>    <!-- 微信js -->
     <link type="text/css" rel="stylesheet" href="/weixin/activity-show.css"/>
     <script type="text/javascript" src="/weixin/weixin-share.js"></script>
+    <script type="text/javascript" src="/weixin/check-images.js"></script>
 </head>
 
 <body>
@@ -27,7 +28,7 @@
             </div>
             <input th:value="${activity.imgUrl}" type="hidden" class="imgUrl"/>
             <div class="guide" th:text="${activity.guide}"></div>
-            <div class="content" th:utext="${activity.content}"></div>
+            <div class="check-images content" th:utext="${activity.content}"></div>
 
             <div class="weui-tab">
                 <div class="weui-navbar">
@@ -47,6 +48,7 @@
                             </div>
                             <div>
                                 <a th:if="${record.status eq '1'}" th:href="@{/wx/activityRecord/signUp(recordId=${record.id})}" class="weui-btn weui-btn_mini weui-btn_primary">报名</a>
+                                <div><a th:href="'/weixin/recordImage?recordId='+${record.id}" class="weui-btn weui-btn_mini weui-btn_primary">影集</a></div>
                                 <span th:unless="${record.status eq '1'}" class="">不可报名</span>
                             </div>
                         </div>
@@ -66,7 +68,7 @@
                                             <span th:remove="tag" th:text="${comment.nickname}"></span>
                                             <span class="weui-media-box__title-after" th:text="${comment.createTime}">下午8:12</span>
                                         </h4>
-                                        <p class="weui-media-box__desc" th:text="${comment.content}">小李明天早上帮我带两个包子，一个猪肉粉丝和一个奶黄包</p>
+                                        <p class="weui-media-box__desc" th:text="${comment.content}"></p>
                                     </div>
                                 </a>
                             </div>
