@@ -72,6 +72,17 @@ public class ActivityRecord {
     @Column(name = "img_count")
     private Integer imgCount = 0;
 
+    @Column(name = "publish_date")
+    public String publishDate;
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public Integer getImgCount() {
         return imgCount;
     }

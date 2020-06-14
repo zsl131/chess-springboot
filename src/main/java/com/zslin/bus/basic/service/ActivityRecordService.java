@@ -94,6 +94,11 @@ public class ActivityRecordService {
             a.setMaxCount(ar.getMaxCount());
             a.setStatus(ar.getStatus());
             a.setStartTime(ar.getStartTime());
+            if(ar.getPublishDate()!=null && !"".equals(ar.getPublishDate())) {
+                a.setPublishDate(ar.getPublishDate());
+            } else {
+                a.setPublishDate(NormalTools.curDate());
+            }
             activityRecordDao.save(a);
 //            return new JsonResult(new JsonObj(1, a));
             return JsonResult.getInstance().set("obj", a).set("isAdd", "0");

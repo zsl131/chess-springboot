@@ -109,6 +109,11 @@ public class NoticeService {
                     if(file.exists()) {file.delete();}
                 }
                 MyBeanUtils.copyProperties(obj, d, "id");
+                if(obj.getPublishDate()!=null && !"".equals(obj.getPublishDate())) {
+                    d.setPublishDate(obj.getPublishDate());
+                } else {
+                    d.setPublishDate(NormalTools.curDate());
+                }
                 noticeDao.save(d);
             }
             return JsonResult.succ(obj);

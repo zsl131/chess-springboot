@@ -76,6 +76,17 @@ public class Activity {
     @Column(name = "can_join")
     private String canJoin = "0";
 
+    @Column(name = "publish_date")
+    public String publishDate;
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public Integer getRecordCount() {
         return recordCount;
     }

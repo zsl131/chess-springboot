@@ -167,17 +167,22 @@ public class ActivityService implements IActivityService {
     public JsonResult addOrUpdate(String params) {
         try {
             Activity act = JSONObject.toJavaObject(JSON.parseObject(params), Activity.class);
-            if(act.getId()==null || act.getId()<=0) {
+            if(act.getId()==null || act.getId()<=0) { //新增
                 Department d = departmentDao.findOne(act.getDepId());
                 act.setDepName(d.getName());
                 act.setCreateDate(NormalTools.curDate("yyyy-MM-dd"));
                 act.setCreateTime(NormalTools.curDatetime());
                 activityDao.save(act);
-            } else {
+            } else { //修改
                 Activity a = activityDao.findOne(act.getId());
                 a.setContent(act.getContent());
                 a.setTitle(act.getTitle());
                 a.setStatus(act.getStatus());
+                if(act.getPublishDate()!=null && !"".equals(act.getPublishDate())) {
+                    a.setPublishDate(act.getPublishDate());
+                } else {
+                    a.setPublishDate(NormalTools.curDate());
+                }
                 a.setGuide(act.getGuide());
                 if(act.getImgUrl()!=null && !"".equals(act.getImgUrl())) {
                     a.setImgUrl(act.getImgUrl());

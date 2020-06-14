@@ -71,6 +71,17 @@ public class Notice {
     @Column(name = "video_id")
     private Integer videoId;
 
+    @Column(name = "publish_date")
+    public String publishDate;
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
     public String getCanComment() {
         return canComment;
     }
