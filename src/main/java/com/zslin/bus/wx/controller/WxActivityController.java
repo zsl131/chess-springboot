@@ -7,6 +7,7 @@ import com.zslin.basic.utils.ParamFilterUtil;
 import com.zslin.bus.basic.dao.IActivityCommentDao;
 import com.zslin.bus.basic.dao.IActivityDao;
 import com.zslin.bus.basic.dao.IActivityRecordDao;
+import com.zslin.bus.basic.dao.IActivityStudentDao;
 import com.zslin.bus.basic.model.Activity;
 import com.zslin.bus.basic.model.ActivityComment;
 import com.zslin.bus.basic.model.ActivityRecord;
@@ -36,6 +37,9 @@ public class WxActivityController {
     @Autowired
     private IActivityDao activityDao;
 
+    @Autowired
+    private IActivityStudentDao activityStudentDao;
+
     /** 获取当前活动 */
     @GetMapping(value = "current")
     public String current(Model model, HttpServletRequest request) {
@@ -43,6 +47,12 @@ public class WxActivityController {
         if(id!=null && id>0) {
             return "redirect:/wx/activity/show?id=" + id;
         } else {
+            Integer zeroCount = activityDao.recordCountZero();
+            Integer recordCount = activityDao.recordCount();
+            model.addAttribute("recordCount", zeroCount+recordCount); //活动开展次数
+            model.addAttribute("stuCount", activityStudentDao.countAll()); //所有学员报名人次
+            model.addAttribute("passedCount", activityStudentDao.countPassed()); //报名通过的人次
+//
             return "weixin/activity/noCurrent";
         }
     }

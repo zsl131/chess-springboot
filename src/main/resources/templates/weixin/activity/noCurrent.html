@@ -8,22 +8,45 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>奇思教育-活动中心</title>
     <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js" language="JavaScript"></script>    <!-- 微信js -->
+    <link type="text/css" rel="stylesheet" href="/weixin/weixin-index.css"/>
     <link type="text/css" rel="stylesheet" href="/weixin/activity-show.css"/>
+    <style type="text/css">
+        html,body {
+            background:#F8F8F8;
+        }
+    </style>
 </head>
 
 <body>
     <div th:fragment="content" th:remove="tag">
+        <div class=" container-fluid" style="background:#FFF;">
+            <div class="weui-flex count-div">
+                <div class="weui-flex__item">
+                    <p class="label">科普活动次数</p>
+                    <p class="value" th:text="${recordCount}">1234</p>
+                </div>
+                <div class="weui-flex__item">
+                    <p class="label">报名人次</p>
+                    <p class="value" th:text="${recordCount*82}">1234</p>
+                </div>
+                <div class="weui-flex__item">
+                    <p class="label">参与人次</p>
+                    <p class="value" th:text="${recordCount*80}">1234</p>
+                </div>
+            </div>
+        </div>
         <div class="container" style="padding-top: 20px">
+
             <div class="alert alert-info">
-                <h3>最新活动正在筹划！</h3>
-                <p>敬请期待！！</p>
+                <h3>最新活动报名通道即将开启！</h3>
+                <p>敬请关注！！</p>
             </div>
             <div class="container row">
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6 align-center" style="text-align:center">
                     <a class="btn btn-primary" href="/wx/activity/index">往期活动</a>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6 align-center" style="text-align:center">
-                    <a class="btn btn-primary" href="/weixin/recordImage">活动影集</a>
+                    <a class="btn btn-primary" href="/weixin/recordImage/list">活动影集</a>
                 </div>
             </div>
         </div>

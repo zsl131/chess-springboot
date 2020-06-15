@@ -4,8 +4,10 @@ import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.repository.SpecificationOperator;
 import com.zslin.basic.utils.ParamFilterUtil;
+import com.zslin.bus.basic.dao.INoticeCategoryDao;
 import com.zslin.bus.basic.dao.INoticeDao;
 import com.zslin.bus.basic.model.Notice;
+import com.zslin.bus.basic.model.NoticeCategory;
 import com.zslin.bus.yard.dao.IAttachmentDao;
 import com.zslin.bus.yard.model.Attachment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,21 @@ public class WeixinNoticeController {
     @Autowired
     private IAttachmentDao attachmentDao;
 
+    @Autowired
+    private INoticeCategoryDao noticeCategoryDao;
+
     @GetMapping(value = "index")
-    public String index(Model model, Integer page, HttpServletRequest request) {
-        Page<Notice> datas = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),
+    public String index(Model model, Integer cateId, Integer page, HttpServletRequest request) {
+        Page<Notice> datas = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request,
+                new SpecificationOperator("status", "eq", "1"),
+                (cateId==null||cateId<=0)?null:new SpecificationOperator("cateId", "eq", cateId)),
                 SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
+        if(cateId!=null && cateId>0) {
+            NoticeCategory category = noticeCategoryDao.findOne(cateId);
+            model.addAttribute("category", category);
+        } else {
+            model.addAttribute("category", null);
+        }
         model.addAttribute("datas", datas);
         return "weixin/notice/index";
     }

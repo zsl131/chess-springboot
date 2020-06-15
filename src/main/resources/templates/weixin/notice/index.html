@@ -13,7 +13,7 @@
 <body>
     <div th:fragment="content" th:remove="tag">
         <div>
-            <h2 class="activity-header">通知公告&nbsp;(<span th:text="${datas.totalElements}"></span>)</h2>
+            <h2 class="activity-header"><span th:text="${category ne null?category.name:'通知公告'}"></span>&nbsp;(<span th:text="${datas.totalElements}"></span>)</h2>
             <hr/>
             <div th:each="obj : ${datas}" th:remove="tag">
                 <div class="single-activity">
