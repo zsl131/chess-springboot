@@ -1,0 +1,25 @@
+.single-activity-image-new {
+    width:100%; display: flex; margin-bottom: 10px;
+}
+
+.single-activity-image-new .image-div {
+    width:120px;
+}
+
+.single-activity-image-new .image-div img {
+    width:100%; border:none;
+}
+.single-activity-image-new .image-content {
+    flex: 1; padding-left: 5px;
+}
+.image-content .title {
+    margin-bottom: 0px;
+}
+
+.image-content .hold-time {
+    color:#888; font-size: 12px; margin-top: 2px;
+}
+
+.image-content .address {
+    color:#999; font-size: 12px;
+}

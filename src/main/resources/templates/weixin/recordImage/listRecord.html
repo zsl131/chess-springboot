@@ -13,10 +13,10 @@
 <body>
     <div th:fragment="content" th:remove="tag">
         <div>
-            <div class="image-header-div">
+            <!--<div class="image-header-div">
                 <a href="/weixin/recordImage" th:class="${current==1?'current':''}">活动影集</a>
                 <a href="/weixin/recordImage/listRecord" th:class="${current==2?'current':''}">活动记录</a>
-            </div>
+            </div>-->
             <div th:each="obj : ${datas}" th:remove="tag">
                 <div class="single-activity-record">
                     <b th:text="'['+${obj.imgCount}+']'"></b><a th:href="'/weixin/recordImage?recordId='+${obj.id}" th:text="${obj.actTitle}"></a>

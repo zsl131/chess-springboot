@@ -31,6 +31,16 @@ public class WeixinRecordImageController {
 
     private static final String TEMP_PREFIX = "weixin/recordImage/";
 
+    /** 影集列表，新首页 */
+    @GetMapping(value = "list")
+    public String list(Model model, Integer page) {
+        page = (page==null||page<=0)?0:page;
+        Page<ActivityRecordImage> data = activityRecordImageDao.find4Page(
+                SimplePageBuilder.generate(page, 15, SimpleSortBuilder.generateSort("actId_d,recordId_d")));
+        model.addAttribute("datas", data);
+        return TEMP_PREFIX + "list";
+    }
+
     @GetMapping(value = {"index", "", "/"})
     public String index(Model model, Integer page, Integer recordId, HttpServletRequest request) {
         page = (page==null||page<=0)?0:page;

@@ -5,7 +5,7 @@ $(function() {
     });
 
     $("#image-mask-div").swipe({
-        swipe:function(event, direction, distance, duration, fingerCount, fingerData)                     {
+        swipe:function(event, direction, distance, duration, fingerCount, fingerData) {
           if(direction=='right') {
             const target = $(this).find(".image-mask-img").attr("preCount");
             onOpt("pre", target);

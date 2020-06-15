@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>奇思教育-活动影集</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-image.css"/>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-image-new.css"/>
+    <script type="text/javascript" src="/weixin/plugins/jquery.touchSwipe.min.js"></script>
+    <script type="text/javascript" src="/weixin/activity-image.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <div class="image-content-main-div">
+                <div class="image-content-main">
+                    <div class="image-content-left">
+                        <div th:each="obj,objStat : ${datas}" th:remove="tag">
+                            <div class="single-activity-image-new">
+                                <div class="image-div">
+                                    <a th:href="|/weixin/recordImage/index?recordId=${obj.recordId}|"><img th:src="${obj.imgUrl}"/></a>
+                                </div>
+                                <div class="image-content">
+                                    <a th:href="|/weixin/recordImage/index?recordId=${obj.recordId}|"> <p th:text="${obj.title}" class="title"></p></a>
+                                    <p th:text="${obj.recordHoldTime}" class="hold-time"></p>
+                                    <p th:text="${recordAddress}" class="address"></p>
+                                </div>
+                                <!--<a th:href="'/weixin/recordImage?recordId='+${obj.recordId}"><p th:text="${obj.title}"></p></a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

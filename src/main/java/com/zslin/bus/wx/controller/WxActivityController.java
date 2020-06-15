@@ -36,10 +36,15 @@ public class WxActivityController {
     @Autowired
     private IActivityDao activityDao;
 
+    /** 获取当前活动 */
     @GetMapping(value = "current")
     public String current(Model model, HttpServletRequest request) {
-        Integer id = activityDao.findCurrentId();
-        return "redirect:/wx/activity/show?id="+id;
+        Integer id = activityRecordDao.findCurrentActivityId();
+        if(id!=null && id>0) {
+            return "redirect:/wx/activity/show?id=" + id;
+        } else {
+            return "weixin/activity/noCurrent";
+        }
     }
 
     @GetMapping(value = "index")

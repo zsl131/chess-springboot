@@ -33,4 +33,8 @@ public interface IActivityRecordDao extends BaseRepository<ActivityRecord, Integ
     @Modifying
     @Transactional
     void plusImgCount(Integer count, Integer id);
+
+    /** 获取当前活动 */
+    @Query("SELECT MAX(a.actId) FROM ActivityRecord a WHERE a.status='1' ")
+    Integer findCurrentActivityId();
 }

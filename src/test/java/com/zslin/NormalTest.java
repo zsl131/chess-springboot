@@ -1,15 +1,14 @@
 package com.zslin;
 
 import com.alibaba.fastjson.JSON;
+import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.basic.tools.PinyinToolkit;
 import com.zslin.basic.tools.SecurityUtil;
-import com.zslin.bus.basic.dao.IActivityApplyRecordDao;
-import com.zslin.bus.basic.dao.IDepUserDao;
-import com.zslin.bus.basic.dao.IDepartmentDao;
-import com.zslin.bus.basic.dao.INoticeDao;
+import com.zslin.bus.basic.dao.*;
 import com.zslin.bus.basic.dto.NormalDto;
+import com.zslin.bus.basic.model.ActivityRecordImage;
 import com.zslin.bus.basic.model.Department;
 import com.zslin.bus.basic.model.Notice;
 import com.zslin.bus.basic.model.Student;
@@ -46,6 +45,7 @@ import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import sun.misc.BASE64Decoder;
@@ -120,6 +120,17 @@ public class NormalTest {
 
     @Autowired
     private ImageHandleTools imageHandleTools;
+
+    @Autowired
+    private IActivityRecordImageDao activityRecordImageDao;
+
+    @Test
+    public void test38() {
+        Page<ActivityRecordImage> list = activityRecordImageDao.find4Page(SimplePageBuilder.generate(0));
+        System.out.println(list.getTotalPages());
+        System.out.println(list.getTotalElements());
+        System.out.println(list.getContent());
+    }
 
     @Test
     public void test37() throws Exception {
