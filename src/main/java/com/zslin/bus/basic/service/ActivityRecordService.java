@@ -98,13 +98,14 @@ public class ActivityRecordService {
             a.setMaxCount(ar.getMaxCount());
             a.setStatus(ar.getStatus());
             a.setStartTime(ar.getStartTime());
+            a.setHoldTime(ar.getHoldTime());
             if(ar.getPublishDate()!=null && !"".equals(ar.getPublishDate())) {
                 a.setPublishDate(ar.getPublishDate());
             } else {
                 a.setPublishDate(NormalTools.curDate());
             }
             String holdTime = a.getHoldTime();
-            if(a.getHoldTime()!=null) { //设置日期
+            if(holdTime!=null) { //设置日期
                 activityRecordImageDao.updateHoldTime(buildLong(holdTime), holdTime, a.getId());
             }
             activityRecordDao.save(a);
