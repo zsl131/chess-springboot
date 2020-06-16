@@ -35,6 +35,16 @@ public class NormalTools {
         return sdf.format(new Date());
     }
 
+    public static Long str2Long(String timeStr, String pattern) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            Date date = sdf.parse(timeStr);
+            return date.getTime();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String curDatetime() {
         return curDate("yyyy-MM-dd HH:mm:ss");
     }

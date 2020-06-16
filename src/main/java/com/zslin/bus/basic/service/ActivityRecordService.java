@@ -8,6 +8,7 @@ import com.zslin.basic.repository.SpecificationOperator;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.basic.dao.IActivityDao;
 import com.zslin.bus.basic.dao.IActivityRecordDao;
+import com.zslin.bus.basic.dao.IActivityRecordImageDao;
 import com.zslin.bus.basic.dao.IActivityStudentDao;
 import com.zslin.bus.basic.model.Activity;
 import com.zslin.bus.basic.model.ActivityRecord;
@@ -37,6 +38,9 @@ public class ActivityRecordService {
     private IActivityApplyRecordDao activityApplyRecordDao;*/
     @Autowired
     private IActivityStudentDao activityStudentDao;
+
+    @Autowired
+    private IActivityRecordImageDao activityRecordImageDao;
 
     public JsonResult listRecord(String params) {
         Integer actId = Integer.parseInt(JsonTools.getJsonParam(params, "actId"));
@@ -99,9 +103,18 @@ public class ActivityRecordService {
             } else {
                 a.setPublishDate(NormalTools.curDate());
             }
+            String holdTime = a.getHoldTime();
+            if(a.getHoldTime()!=null) { //设置日期
+                activityRecordImageDao.updateHoldTime(buildLong(holdTime), holdTime, a.getId());
+            }
             activityRecordDao.save(a);
 //            return new JsonResult(new JsonObj(1, a));
             return JsonResult.getInstance().set("obj", a).set("isAdd", "0");
         }
+    }
+
+    private Long buildLong(String holdTime) {
+        Long res = NormalTools.str2Long(holdTime, "yyyy-MM-dd HH:mm:ss");
+        return res;
     }
 }

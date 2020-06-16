@@ -75,6 +75,7 @@ public class UploadRecordImageController {
                     ari.setTitle(actTitle);
                     ari.setRecordAddress(address);
                     ari.setRecordHoldTime(holdTime);
+                    ari.setRecordHoldTimeLong(NormalTools.str2Long(holdTime, "yyyy-MM-dd HH:mm:ss"));
                     activityRecordImageDao.save(ari);
                     result.add(ari);
                     count++;

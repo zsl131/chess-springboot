@@ -32,9 +32,21 @@ public class ActivityRecordImage {
     @Column(name = "record_hold_time")
     private String recordHoldTime;
 
+    /** 活动开展时间Long */
+    @Column(name = "record_hold_time_long")
+    private Long recordHoldTimeLong;
+
     /** 活动开展地点 */
     @Column(name = "record_address")
     private String recordAddress;
+
+    public Long getRecordHoldTimeLong() {
+        return recordHoldTimeLong;
+    }
+
+    public void setRecordHoldTimeLong(Long recordHoldTimeLong) {
+        this.recordHoldTimeLong = recordHoldTimeLong;
+    }
 
     public Integer getId() {
         return id;

@@ -36,7 +36,7 @@ public class WeixinRecordImageController {
     public String list(Model model, Integer page) {
         page = (page==null||page<=0)?0:page;
         Page<ActivityRecordImage> data = activityRecordImageDao.find4Page(
-                SimplePageBuilder.generate(page, 15, SimpleSortBuilder.generateSort("recordHoldTime_d,recordId_d")));
+                SimplePageBuilder.generate(page, 15, SimpleSortBuilder.generateSort("recordHoldTimeLong_d,recordId_d")));
         model.addAttribute("datas", data);
         return TEMP_PREFIX + "list";
     }

@@ -50,6 +50,10 @@ public class ClassCourse {
     @Column(name = "learn_id")
     private Integer learnId;
 
+    /** 其他附件ID */
+    @Column(name = "other_id")
+    private Integer otherId;
+
     /** category id */
     private Integer cid;
 
@@ -77,6 +81,14 @@ public class ClassCourse {
     /** 图片地址 */
     @Column(name = "img_url")
     private String imgUrl;
+
+    public Integer getOtherId() {
+        return otherId;
+    }
+
+    public void setOtherId(Integer otherId) {
+        this.otherId = otherId;
+    }
 
     public String getImgUrl() {
         return imgUrl;
