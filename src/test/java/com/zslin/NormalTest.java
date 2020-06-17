@@ -7,6 +7,7 @@ import com.zslin.basic.tools.NormalTools;
 import com.zslin.basic.tools.PinyinToolkit;
 import com.zslin.basic.tools.SecurityUtil;
 import com.zslin.bus.basic.dao.*;
+import com.zslin.bus.basic.dto.ActivityRecordImageDto;
 import com.zslin.bus.basic.dto.NormalDto;
 import com.zslin.bus.basic.model.ActivityRecordImage;
 import com.zslin.bus.basic.model.Department;
@@ -126,10 +127,10 @@ public class NormalTest {
 
     @Test
     public void test38() {
-        Page<ActivityRecordImage> list = activityRecordImageDao.find4Page(SimplePageBuilder.generate(0));
+        /*Page<ActivityRecordImageDto> list = activityRecordImageDao.find4Page(SimplePageBuilder.generate(0));
         System.out.println(list.getTotalPages());
         System.out.println(list.getTotalElements());
-        System.out.println(list.getContent());
+        System.out.println(list.getContent());*/
     }
 
     @Test

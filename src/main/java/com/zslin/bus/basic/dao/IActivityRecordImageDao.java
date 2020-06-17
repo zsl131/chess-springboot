@@ -16,7 +16,7 @@ public interface IActivityRecordImageDao extends BaseRepository<ActivityRecordIm
 
     List<ActivityRecordImage> findByRecordId(Integer recordId, Sort sort);
 
-    @Query("FROM ActivityRecordImage a GROUP BY a.actId")
+    @Query("FROM ActivityRecordImage a GROUP BY a.recordId")
     Page<ActivityRecordImage> find4Page(Pageable pageable);
 
     @Query("UPDATE ActivityRecordImage a SET a.recordHoldTimeLong=?1, a.recordHoldTime=?2 WHERE a.recordId=?3")
