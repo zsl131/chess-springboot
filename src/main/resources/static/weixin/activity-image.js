@@ -1,5 +1,14 @@
 $(function() {
     //console.log("------")
+
+    $(".record-count-div").find("input").each(function() {
+        var amount = $(this).val();
+        var recordId = $(this).attr("recordId");
+//        console.log(recordId+"----"+amount);
+        $(("recordId-"+recordId)).html(amount);
+//        $("input[name='']")
+        $("b[curRecordId='recordId-"+recordId+"']").html(amount);
+    });
     $(".single-activity-image>img").click(function() {
         buildMaskImage($(this));
     });

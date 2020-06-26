@@ -13,13 +13,18 @@
     flex: 1; padding-left: 5px;
 }
 .image-content .title {
-    margin-bottom: 0px;
+    margin-bottom: 0px; color:#333;
 }
 
 .image-content .hold-time {
-    color:#888; font-size: 12px; margin-top: 2px;
+    color:#888; font-size: 12px; margin-top: 6px;
 }
 
 .image-content .address {
     color:#999; font-size: 12px;
+}
+
+
+.show-record-div {
+    width:100%; margin-top: 12px; padding: 10px;
 }

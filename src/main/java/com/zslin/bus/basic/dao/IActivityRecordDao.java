@@ -2,6 +2,7 @@ package com.zslin.bus.basic.dao;
 
 import com.zslin.basic.repository.BaseRepository;
 import com.zslin.bus.basic.model.ActivityRecord;
+import com.zslin.bus.wx.dto.RecordImageCountDto;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,7 @@ public interface IActivityRecordDao extends BaseRepository<ActivityRecord, Integ
     /** 获取当前活动 */
     @Query("SELECT MAX(a.actId) FROM ActivityRecord a WHERE a.status='1' ")
     Integer findCurrentActivityId();
+
+    @Query("SELECT new com.zslin.bus.wx.dto.RecordImageCountDto(r.id, r.imgCount) FROM ActivityRecord r WHERE r.id IN (?1)")
+    List<RecordImageCountDto> queryCountDto(Integer[] recordIds);
 }

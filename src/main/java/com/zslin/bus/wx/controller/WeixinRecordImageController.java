@@ -8,6 +8,8 @@ import com.zslin.bus.basic.dao.IActivityRecordDao;
 import com.zslin.bus.basic.dao.IActivityRecordImageDao;
 import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.basic.model.ActivityRecordImage;
+import com.zslin.bus.wx.dto.RecordImageCountDto;
+import com.zslin.bus.wx.tools.RecordImageTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,9 @@ public class WeixinRecordImageController {
     @Autowired
     private IActivityRecordImageDao activityRecordImageDao;
 
+    @Autowired
+    private RecordImageTools recordImageTools;
+
     private static final String TEMP_PREFIX = "weixin/recordImage/";
 
     /** 影集列表，新首页 */
@@ -37,7 +42,11 @@ public class WeixinRecordImageController {
         page = (page==null||page<=0)?0:page;
         Page<ActivityRecordImage> data = activityRecordImageDao.find4Page(
                 SimplePageBuilder.generate(page, 15, SimpleSortBuilder.generateSort("recordHoldTimeLong_d", "recordId_d")));
+        List<RecordImageCountDto> countList = recordImageTools.queryCountDto(data.getContent());
         model.addAttribute("datas", data);
+        System.out.println(countList);
+        model.addAttribute("countList", countList);
+
         return TEMP_PREFIX + "list";
     }
 
@@ -52,6 +61,7 @@ public class WeixinRecordImageController {
         model.addAttribute("data2", result.get(1));
         model.addAttribute("datas", datas);
         model.addAttribute("current", 1);
+        model.addAttribute("record", activityRecordDao.findOne(recordId));
         return TEMP_PREFIX + "index";
     }
 
