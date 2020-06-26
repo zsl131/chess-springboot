@@ -21,7 +21,10 @@ hr {
 }
 
 .single-activity .content .guide {
-    color:#999; max-height:85px; overflow: hidden; line-height: 28px; text-overflow:ellipsis;
+    color:#999; max-height:85px; overflow: hidden; line-height: 28px; text-indent: 2em; margin-top: 8px; width:100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
 .single-activity .content .icon {
