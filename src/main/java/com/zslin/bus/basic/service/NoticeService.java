@@ -100,6 +100,13 @@ public class NoticeService {
                 obj.setCreateTime(NormalTools.curDatetime());
                 obj.setCreateLong(System.currentTimeMillis());
                 obj.setCreateDay(NormalTools.curDate("yyyy-MM-dd"));
+
+                if(obj.getPublishDate()!=null && !"".equals(obj.getPublishDate())) {
+                    obj.setPublishDateLong(buildLong(obj.getPublishDate()));
+                } else {
+                    obj.setPublishDateLong(System.currentTimeMillis());
+                }
+
                 noticeDao.save(obj); //添加
             } else {
                 Notice d = noticeDao.findOne(obj.getId());
@@ -111,8 +118,10 @@ public class NoticeService {
                 MyBeanUtils.copyProperties(obj, d, "id");
                 if(obj.getPublishDate()!=null && !"".equals(obj.getPublishDate())) {
                     d.setPublishDate(obj.getPublishDate());
+                    d.setPublishDateLong(buildLong(obj.getPublishDate()));
                 } else {
                     d.setPublishDate(NormalTools.curDate());
+                    d.setPublishDateLong(System.currentTimeMillis());
                 }
                 noticeDao.save(d);
             }
@@ -121,6 +130,11 @@ public class NoticeService {
             e.printStackTrace();
             return JsonResult.error(e.getMessage());
         }
+    }
+
+    private Long buildLong(String holdTime) {
+        Long res = NormalTools.str2Long(holdTime, "yyyy-MM-dd");
+        return res;
     }
 
     /**

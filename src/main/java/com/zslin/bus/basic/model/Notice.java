@@ -74,6 +74,17 @@ public class Notice {
     @Column(name = "publish_date")
     public String publishDate;
 
+    @Column(name = "publish_date_long")
+    private Long publishDateLong;
+
+    public Long getPublishDateLong() {
+        return publishDateLong;
+    }
+
+    public void setPublishDateLong(Long publishDateLong) {
+        this.publishDateLong = publishDateLong;
+    }
+
     public String getPublishDate() {
         return publishDate;
     }

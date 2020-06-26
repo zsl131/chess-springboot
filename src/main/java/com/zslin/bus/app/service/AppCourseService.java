@@ -99,15 +99,28 @@ public class AppCourseService {
     private List<ClassCourse> buildData(List<ClassSystemDetail> detailList) {
         if(detailList==null || detailList.size()<=0) {return new ArrayList<>();}
         List<Integer> ids = detailList.stream().map(ClassSystemDetail::getCourseId).collect(Collectors.toList());
+        ids = rebuildIds(ids); //去除null
         List<ClassCourse> list = classCourseDao.findByIds(ids);
         List<ClassCourse> result = new ArrayList<>();
         for(ClassSystemDetail csd : detailList) { //排序
 //            System.out.println(csd.getName());
             for(ClassCourse cc : list) {
-                if(csd.getCourseId().equals(cc.getId())) {
-                    result.add(cc);
+                try { //避免null导致的异常
+                    if(csd.getCourseId().equals(cc.getId())) {
+                        result.add(cc);
+                    }
+                } catch (Exception e) {
                 }
             }
+        }
+        return result;
+    }
+
+    //去除null
+    private List<Integer> rebuildIds(List<Integer> ids) {
+        List<Integer> result = new ArrayList<>();
+        for(Integer id : ids) {
+            if(id!=null && id>0) {result.add(id);}
         }
         return result;
     }

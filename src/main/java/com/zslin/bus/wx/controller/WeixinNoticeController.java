@@ -40,7 +40,7 @@ public class WeixinNoticeController {
         Page<Notice> datas = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request,
                 new SpecificationOperator("status", "eq", "1"),
                 (cateId==null||cateId<=0)?null:new SpecificationOperator("cateId", "eq", cateId)),
-                SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
+                SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("publishDateLong_d", "id_d")));
         if(cateId!=null && cateId>0) {
             NoticeCategory category = noticeCategoryDao.findOne(cateId);
             model.addAttribute("category", category);
