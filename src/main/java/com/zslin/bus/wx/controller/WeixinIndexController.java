@@ -5,9 +5,11 @@ import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.repository.SpecificationOperator;
 import com.zslin.basic.utils.ParamFilterUtil;
 import com.zslin.bus.basic.dao.IActivityDao;
+import com.zslin.bus.basic.dao.IActivityRecordDao;
 import com.zslin.bus.basic.dao.IActivityStudentDao;
 import com.zslin.bus.basic.dao.INoticeDao;
 import com.zslin.bus.basic.model.Activity;
+import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.basic.model.ActivityStudent;
 import com.zslin.bus.basic.model.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class WeixinIndexController {
     @Autowired
     private INoticeDao noticeDao;
 
+    @Autowired
+    private IActivityRecordDao activityRecordDao;
+
     @GetMapping(value = "index")
     public String index(Model model, Integer page, HttpServletRequest request) {
         Integer zeroCount = activityDao.recordCountZero();
@@ -42,6 +47,14 @@ public class WeixinIndexController {
         model.addAttribute("recordCount", zeroCount+recordCount); //活动开展次数
 //        model.addAttribute("stuCount", activityStudentDao.countAll()); //所有学员报名人次
 //        model.addAttribute("passedCount", activityStudentDao.countPassed()); //报名通过的人次
+
+        Integer id = activityRecordDao.findCurrentActivityId();
+        if(id!=null && id>0) {
+            ActivityRecord ar = activityRecordDao.findOne(id);
+            model.addAttribute("record", ar);
+        } else {
+            model.addAttribute("record", null);
+        }
 
         Page<Activity> activityList = activityDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),
                 SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
