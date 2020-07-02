@@ -46,6 +46,9 @@ public class AppCourseService {
     @Autowired
     private IClassSystemDetailDao classSystemDetailDao;
 
+    @Autowired
+    private IClassCourseAttaDao classCourseAttaDao;
+
     /**
      * 通过标签获取课程
      * @param params 必须包含tagId
@@ -178,8 +181,10 @@ public class AppCourseService {
         Attachment video = (course.getVideoId()==null||course.getVideoId()<=0)?null:attachmentDao.findOne(course.getVideoId());
         Attachment ppt = (course.getPptId()==null||course.getPptId()<=0)?null:attachmentDao.findOne(course.getPptId());
         Attachment learn = (course.getLearnId()==null||course.getLearnId()<=0)?null:attachmentDao.findOne(course.getLearnId());
+        List<ClassCourseAtta> attaList = classCourseAttaDao.findByCourseId(cid);
 
         return JsonResult.success().set("course", course).set("video", video).set("ppt", ppt).set("learn", learn)
-                .set("commentList", commentList.getContent()).set("commentCount", commentList.getTotalElements());
+                .set("commentList", commentList.getContent()).set("commentCount", commentList.getTotalElements())
+                .set("attaList", attaList);
     }
 }

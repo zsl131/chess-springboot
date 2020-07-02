@@ -7,9 +7,11 @@ import com.zslin.bus.qiniu.tools.QiniuConfigTools;
 import com.zslin.bus.qiniu.tools.QiniuUploadTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.IAttachmentDao;
+import com.zslin.bus.yard.dao.IClassCourseAttaDao;
 import com.zslin.bus.yard.dao.ISchoolDao;
 import com.zslin.bus.yard.dao.ITeacherDao;
 import com.zslin.bus.yard.model.Attachment;
+import com.zslin.bus.yard.model.ClassCourseAtta;
 import com.zslin.bus.yard.model.School;
 import com.zslin.bus.yard.model.Teacher;
 import com.zslin.bus.yard.tools.MyFileTools;
@@ -59,6 +61,9 @@ public class YardUploadController {
     @Autowired
     private QiniuConfigTools qiniuConfigTools;
 
+    @Autowired
+    private IClassCourseAttaDao classCourseAttaDao;
+
     private static final String UPLOAD_PATH_PRE = "/publicFile/yard";
 
     /**
@@ -71,9 +76,9 @@ public class YardUploadController {
     @RequestMapping(value = "uploadFile")
     public JsonResult uploadFile(@RequestParam("file")MultipartFile[] multipartFile, String path) throws IOException {
         if(multipartFile!=null && multipartFile.length>=1) {
-            MultipartFile mf = multipartFile[0];
+//            MultipartFile mf = multipartFile[0];
 //                System.out.println(mf.getName() + "===" + mf.getOriginalFilename() + "===" + mf.getContentType());
-            FileInputStream fileInputStream = (FileInputStream) mf.getInputStream();
+//            FileInputStream fileInputStream = (FileInputStream) mf.getInputStream();
 
             MultipartFile file = multipartFile[0];
             String fileName = file.getOriginalFilename();
@@ -122,6 +127,59 @@ public class YardUploadController {
 //                result = atta.getId()+"-"+filePath; //组合结果
                 return JsonResult.succ(atta);
             }
+        }
+        return JsonResult.error("上传不成功");
+    }
+
+    /**
+     * 保存文件，直接以multipartFile形式
+     * @param multipartFile
+     * @param courseId 课程ID
+     * @return 返回文件名
+     * @throws IOException
+     */
+    @RequestMapping(value = "uploadAttachment")
+    public JsonResult uploadAttachment(@RequestParam("file")MultipartFile[] multipartFile, Integer courseId) throws IOException {
+        System.out.println("courseId--->"+courseId);
+        if(multipartFile!=null && multipartFile.length>=1 && courseId!=null && courseId>0) {
+//            MultipartFile mf = multipartFile[0];
+//                System.out.println(mf.getName() + "===" + mf.getOriginalFilename() + "===" + mf.getContentType());
+//            FileInputStream fileInputStream = (FileInputStream) mf.getInputStream();
+            for(MultipartFile file: multipartFile) {
+                String fileName = file.getOriginalFilename();
+//                    System.out.println("========fileName::"+fileName);
+                if (fileName != null && !"".equalsIgnoreCase(fileName.trim())) {
+                    String fileType = MyFileTools.getFileType(fileName);
+
+                    /*boolean isVideo = false;
+                    String type = "";//1-图片；2-ppt；3-视频；4-Word文档；5-PDF
+                    if(MyFileTools.isImageFile(fileName)) {type = "1";}
+                    else if(MyFileTools.isPPTFile(fileName)) {type = "2";}
+                    else if(MyFileTools.isVideoFile(fileName)) {type = "3"; isVideo = true;}
+                    else if(MyFileTools.isWordFile(fileName)) {type = "4";}
+                    else if(MyFileTools.isPDFFile(fileName)) {type = "5";}
+
+                    Attachment atta = new Attachment();*/
+
+                    File outFile = new File(configTools.getUploadPath(UPLOAD_PATH_PRE) + File.separator + "attachment" + File.separator + UUID.randomUUID().toString() + fileType);
+                    String filePath = outFile.getAbsolutePath().replace(configTools.getUploadPath(), File.separator);
+                    FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+
+                    filePath = filePath.replaceAll("\\\\", "/");
+
+                    ClassCourseAtta cca = new ClassCourseAtta();
+                    cca.setCourseId(courseId);
+                    cca.setName(fileName.replace(fileType, ""));
+                    cca.setUrl(filePath);
+
+                    classCourseAttaDao.save(cca);
+
+//                result = atta.getId()+"-"+filePath; //组合结果
+                    return JsonResult.succ(cca);
+                }
+            }
+            //MultipartFile file = multipartFile[0];
+
         }
         return JsonResult.error("上传不成功");
     }

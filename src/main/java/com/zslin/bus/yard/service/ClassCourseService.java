@@ -13,6 +13,7 @@ import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.ClassCategory;
 import com.zslin.bus.yard.model.ClassCourse;
+import com.zslin.bus.yard.model.ClassCourseAtta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class ClassCourseService {
     @Autowired
     private IClassSystemDetailDao classSystemDetailDao;
 
+    @Autowired
+    private IClassCourseAttaDao classCourseAttaDao;
+
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
         Page<ClassCourse> res = classCourseDao.findAll(QueryTools.getInstance().buildSearch(qld.getConditionDtoList()),
@@ -62,7 +66,9 @@ public class ClassCourseService {
             if(s.getLearnId()!=null && s.getLearnId()>0) {result.set("learn", attachmentDao.findOne(s.getLearnId()));}
             if(s.getPptId()!=null && s.getPptId()>0) {result.set("ppt", attachmentDao.findOne(s.getPptId()));}
             if(s.getVideoId()!=null && s.getVideoId()>0) {result.set("video", attachmentDao.findOne(s.getVideoId()));}
-            result.set("gradeList", gradeDao.findAll(SimpleSortBuilder.generateSort("orderNo_a")));
+            List<ClassCourseAtta> attaList = classCourseAttaDao.findByCourseId(id);
+            result.set("gradeList", gradeDao.findAll(SimpleSortBuilder.generateSort("orderNo_a")))
+            .set("attaList", attaList);
 
             return result;
         } catch (Exception e) {
