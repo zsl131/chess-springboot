@@ -56,16 +56,25 @@ public class WeixinIndexController {
             model.addAttribute("record", null);
         }
 
-        Page<Activity> activityList = activityDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),
+        /*Page<Activity> activityList = activityDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),
                 SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
+        model.addAttribute("activityList", activityList);*/
+
+        Page<Notice> activityList = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request,
+                new SpecificationOperator("status", "eq", "1", "and"),
+                new SpecificationOperator("cateId", "eq", 2, "and",
+                        new SpecificationOperator("cateId", "eq", 4, "or"))),
+                SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("publishDateLong_d")));
         model.addAttribute("activityList", activityList);
 
         Page<ActivityStudent> studentList = activityStudentDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request),
                 SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
         model.addAttribute("studentList", studentList);
 
-        Page<Notice> noticeList = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request, new SpecificationOperator("status", "eq", "1")),
-                SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
+        Page<Notice> noticeList = noticeDao.findAll(ParamFilterUtil.getInstance().buildSearch(model, request,
+                new SpecificationOperator("status", "eq", "1"),
+                new SpecificationOperator("cateId", "eq", 1)),
+                SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("publishDateLong_d")));
         model.addAttribute("noticeList", noticeList);
 
         return "weixin/index";
