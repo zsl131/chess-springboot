@@ -1,7 +1,10 @@
 package com.zslin.bus.common.tools;
 
+import com.zslin.bus.common.dto.AppUserDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by zsl on 2018/7/7.
@@ -56,6 +59,25 @@ public class JsonTools {
         } catch (Exception e) {
         }
         return result;
+    }
+
+    /**
+     * 生成用户DTO对象
+     * @param request
+     * @return
+     */
+    public static AppUserDto buildUserDto(HttpServletRequest request) {
+        String loginToken = request.getHeader("login-token"); //登陆token
+        Integer userId = 0; //
+        try {
+            userId = Integer.parseInt(request.getHeader("userid"));
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        String name = request.getHeader("name");
+        String phone = request.getHeader("phone");
+        //Integer userId, String name, String phone, String token
+        return new AppUserDto(userId, name, phone, loginToken);
     }
 
     public static Integer getId(String jsonStr) {

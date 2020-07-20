@@ -1,12 +1,15 @@
 package com.zslin.bus.common.controller;
 
 import com.zslin.basic.tools.Base64Utils;
+import com.zslin.bus.common.dto.AppUserDto;
 import com.zslin.bus.common.iservice.IApiCodeSerivce;
 import com.zslin.bus.common.iservice.IApiTokenCodeService;
 import com.zslin.bus.common.iservice.IApiTokenService;
 import com.zslin.bus.common.model.ApiCode;
 import com.zslin.bus.common.model.ApiToken;
 import com.zslin.bus.common.model.ApiTokenCode;
+import com.zslin.bus.common.tools.AppUserLoginTools;
+import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.test.dao.INewsDao;
 import com.zslin.bus.tools.JsonParamTools;
 import com.zslin.bus.tools.JsonResult;
@@ -43,6 +46,9 @@ public class ApiController {
     @Autowired
     private IApiTokenCodeService apiTokenCodeService;
 
+    @Autowired
+    private AppUserLoginTools appUserLoginTools;
+
     /**
      * 此接口调用的业务接口有一个名为"handle"的方法，此方法接受两个String类型的参数action和params
      *  - action - 具体的处理业务
@@ -55,8 +61,16 @@ public class ApiController {
     public JsonResult baseRequest(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader("auth-token"); //身份认证token
         String apiCode = request.getHeader("api-code"); //接口访问编码
+//        String loginToken = request.getHeader("login-token"); //登陆token
+//        System.out.println("---------"+loginToken);
+        AppUserDto userDto = JsonTools.buildUserDto(request); //用户信息
+        System.out.println(userDto);
         if(token == null || "".equals(token) || apiCode==null || "".equals(apiCode)) {
             return JsonResult.getInstance().fail("auth-token或api-code为空");
+        }
+        //检测token是否有效
+        if(!apiCode.contains("login") && !appUserLoginTools.checkLogin(userDto.getPhone(), userDto.getToken())) {
+            return JsonResult.getInstance().fail("用户登陆失效，请重新登陆").set("login", "timeout");
         }
         try {
             String serviceName = apiCode.split("\\.")[0];

@@ -33,6 +33,15 @@ public class CacheTools {
     }
 
     /**
+     * 删除缓存
+     * @param key
+     */
+    public void deleteKey(String key) {
+        key = rebuildKey(key);
+        redisTemplate.delete(key);
+    }
+
+    /**
      * 添加缓存
      * @param key 键
      * @param value 值

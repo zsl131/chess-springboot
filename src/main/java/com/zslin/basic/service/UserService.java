@@ -22,6 +22,7 @@ import com.zslin.bus.basic.dao.IOtherLoginDao;
 import com.zslin.bus.basic.model.OtherLogin;
 import com.zslin.bus.common.annotations.ApiCodeClass;
 import com.zslin.bus.common.dto.QueryListDto;
+import com.zslin.bus.common.tools.AppUserLoginTools;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.common.tools.TeacherLoginTools;
@@ -57,6 +58,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private TeacherLoginTools teacherLoginTools;
+
+    @Autowired
+    private AppUserLoginTools appUserLoginTools;
 
     @AdminAuth(name = "用户列表", orderNum = 1)
     public JsonResult listUser(String params) {
@@ -147,7 +151,9 @@ public class UserService implements IUserService {
 
             JsonResult result = teacherLoginTools.teacherLogin(username);
 
-            result.set("obj", loginDto);
+            String token = appUserLoginTools.buildToken(username); //token值
+
+            result.set("obj", loginDto).set("token", token);
             return result;
 //            return JsonResult.succ(loginDto);
         } catch (Exception e) {
@@ -175,7 +181,9 @@ public class UserService implements IUserService {
             LoginDto loginDto = loginTools.buildAuthMenus(user.getId());
             loginDto.setUser(user);
 
-            return JsonResult.succ(loginDto);
+            String loginToken = appUserLoginTools.buildToken(username); //token值
+
+            return JsonResult.succ(loginDto).set("token", loginToken);
         } catch (Exception e) {
             e.printStackTrace();
             return JsonResult.error(e.getMessage());

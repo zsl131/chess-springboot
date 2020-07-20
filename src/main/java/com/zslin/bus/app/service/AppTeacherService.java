@@ -2,6 +2,7 @@ package com.zslin.bus.app.service;
 
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.SecurityUtil;
+import com.zslin.bus.common.tools.AppUserLoginTools;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
@@ -34,6 +35,9 @@ public class AppTeacherService {
 
     @Autowired
     private IClassSystemDao classSystemDao;
+
+    @Autowired
+    private AppUserLoginTools appUserLoginTools;
 
     /**
      * 获取教师所可访问的年级
@@ -127,7 +131,9 @@ public class AppTeacherService {
             } else if (t.getPassword() == null || !t.getPassword().equals(pwd)) { //密码为空或不匹配
                 return JsonResult.success("密码不正确").set("flag", "0");
             } else {
-                return JsonResult.success("获取成功").set("flag", "1").set("obj", t);
+                String token = appUserLoginTools.buildToken(username); //token值
+                //System.out.println("------AppTeacherService-------"+token);
+                return JsonResult.success("获取成功").set("flag", "1").set("obj", t).set("token", token);
             }
         } catch (Exception e) {
             return JsonResult.error(e.getMessage());
