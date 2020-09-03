@@ -7,15 +7,10 @@ import com.zslin.bus.app.model.AppFeedbackImg;
 import com.zslin.bus.common.controller.dto.UploadResult;
 import com.zslin.bus.qiniu.tools.QiniuConfigTools;
 import com.zslin.bus.qiniu.tools.QiniuUploadTools;
-import com.zslin.bus.yard.dao.IClassCommentDao;
-import com.zslin.bus.yard.dao.IClassCourseDao;
-import com.zslin.bus.yard.dao.IClassImageDao;
-import com.zslin.bus.yard.dao.ITeacherDao;
-import com.zslin.bus.yard.model.ClassComment;
-import com.zslin.bus.yard.model.ClassCourse;
-import com.zslin.bus.yard.model.ClassImage;
-import com.zslin.bus.yard.model.Teacher;
+import com.zslin.bus.yard.dao.*;
+import com.zslin.bus.yard.model.*;
 import com.zslin.bus.yard.tools.MyFileTools;
+import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +57,12 @@ public class AppUploadController {
     @Autowired
     private ITeacherDao teacherDao;
 
+    @Autowired
+    private ITeacherClassroomDao teacherClassroomDao;
+
+    @Autowired
+    private TeachPlanConfigTools teachPlanConfigTools;
+
     /**
      * 上传课堂照片
      * @param multipartFile
@@ -70,7 +71,7 @@ public class AppUploadController {
      * @return
      */
     @RequestMapping(value = "classImage")
-    public UploadResult classImage(@RequestParam("files") MultipartFile[] multipartFile, String phone, Integer courseId) {
+    public UploadResult classImage(@RequestParam("files") MultipartFile[] multipartFile, String phone, Integer courseId, Integer roomId) {
         UploadResult result = new UploadResult(0);
         try {
             if(multipartFile!=null && multipartFile.length>=1) {
@@ -100,6 +101,8 @@ public class AppUploadController {
                     qiniuUploadTools.upload(file.getInputStream(), key);
                 }
 
+                TeacherClassroom classroom = teacherClassroomDao.findOne(roomId);
+
                 ClassImage ci = new ClassImage();
                 ClassCourse course = classCourseDao.findOne(courseId);
                 Teacher tea = teacherDao.findByPhone(phone);
@@ -116,6 +119,11 @@ public class AppUploadController {
                 ci.setTeaId(tea.getId());
                 ci.setTeaName(tea.getName());
                 ci.setTeaPhone(phone);
+
+                ci.setRoomId(roomId);
+                ci.setRoomName(classroom.getRoomName());
+                ci.setOwnYear(teachPlanConfigTools.getCurYear());
+
                 ci.setUrl(qiniuConfigTools.getQiniuConfig().getUrl() + key);
                 classImageDao.save(ci);
             }

@@ -13,6 +13,11 @@ import java.util.List;
  */
 public interface IClassSystemDao extends BaseRepository<ClassSystem, Integer>, JpaSpecificationExecutor<ClassSystem> {
 
+    //@Query("SELECT p FROM Product p WHERE p.title LIKE %?1%")
+    //通过名称查找体系，必须是子体系
+    @Query("SELECT m FROM ClassSystem m WHERE m.pid IS NOT NULL AND m.name LIKE %?1%")
+    List<ClassSystem> searchByTitle(String title);
+
     @Query("FROM ClassSystem m WHERE (m.pid IS NULL OR m.pid=0)")
     List<ClassSystem> findRoot(Sort sort);
 

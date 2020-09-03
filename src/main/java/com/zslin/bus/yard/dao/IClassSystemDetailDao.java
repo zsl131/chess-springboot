@@ -29,4 +29,7 @@ public interface IClassSystemDetailDao extends BaseRepository<ClassSystemDetail,
     /** 获取CourseId对应的Detail元素ID */
     @Query("SELECT c.id FROM ClassSystemDetail c WHERE c.courseId=?1")
     List<Integer> findIdsByCourseId(Integer cid);
+
+    @Query("FROM ClassSystemDetail c WHERE c.sid IN(?1)")
+    List<ClassSystemDetail> findByIds(List<Integer> ids);
 }

@@ -12,4 +12,11 @@ public interface IClassImageDao extends BaseRepository<ClassImage, Integer>, Jpa
 
     @Query("FROM ClassImage c WHERE c.teaPhone=?1 AND c.createYear=?2 AND c.courseId=?3")
     List<ClassImage> findByTea(String phone, String year, Integer courseId, Sort sort);
+
+    /**  */
+    @Query("FROM ClassImage c WHERE c.teaId=?1 AND c.ownYear=?2 AND c.roomId=?3")
+    List<ClassImage> findByTea(Integer teaId, String year, Integer roomId);
+
+    @Query("FROM ClassImage c WHERE c.teaId=?1 AND c.ownYear=?2 AND c.courseId=?3 AND c.roomId=?4")
+    List<ClassImage> findByTea(Integer teaId, String year, Integer courseId, Integer roomId);
 }

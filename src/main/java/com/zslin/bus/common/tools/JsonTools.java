@@ -41,6 +41,15 @@ public class JsonTools {
         }
     }
 
+    public static Integer getIntegerParams(String jsonStr, String field) {
+        String res = getJsonParam(jsonStr, field);
+        try {
+            return Integer.parseInt(res);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * 获取JSON数据中的某属性值
      * @param jsonStr JSON字符串

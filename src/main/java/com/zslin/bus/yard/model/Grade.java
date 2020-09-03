@@ -23,7 +23,41 @@ public class Grade {
     @Column(name = "order_no")
     private Integer orderNo;
 
+    /** 是否供教师选择 */
+    @Column(name = "teacher_flag")
+    private String teacherFlag;
+
+    /** 关联的体系ID */
+    private Integer sid;
+
+    /** 关联的体系名称 */
+    private String sname;
+
     private String remark;
+
+    public String getTeacherFlag() {
+        return teacherFlag;
+    }
+
+    public void setTeacherFlag(String teacherFlag) {
+        this.teacherFlag = teacherFlag;
+    }
+
+    public Integer getSid() {
+        return sid;
+    }
+
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
+
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
+    }
 
     public Integer getOrderNo() {
         return orderNo;

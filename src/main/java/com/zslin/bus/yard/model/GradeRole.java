@@ -19,6 +19,17 @@ public class GradeRole {
 
     private String name;
 
+    @Column(name = "teacher_flag")
+    private String teacherFlag;
+
+    public String getTeacherFlag() {
+        return teacherFlag;
+    }
+
+    public void setTeacherFlag(String teacherFlag) {
+        this.teacherFlag = teacherFlag;
+    }
+
     public Integer getId() {
         return id;
     }

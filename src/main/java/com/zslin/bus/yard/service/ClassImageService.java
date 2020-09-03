@@ -11,9 +11,12 @@ import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.IClassImageDao;
 import com.zslin.bus.yard.model.ClassImage;
+import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AdminAuth(name = "课堂影像管理", psn = "科普进校园", orderNum = 3, type = "1", url = "/yard/classImage")
@@ -21,6 +24,9 @@ public class ClassImageService {
 
     @Autowired
     private IClassImageDao classImageDao;
+
+    @Autowired
+    private TeachPlanConfigTools teachPlanConfigTools;
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);
@@ -57,5 +63,16 @@ public class ClassImageService {
         } catch (Exception e) {
             return JsonResult.error(e.getMessage());
         }
+    }
+
+    public JsonResult queryByTea(String params) {
+        System.out.println(params);
+        Integer courseId = JsonTools.getIntegerParams(params, "courseId");
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        Integer roomId = JsonTools.getIntegerParams(params, "roomId");
+        String year = teachPlanConfigTools.getCurYear();
+
+        List<ClassImage> imageList = classImageDao.findByTea(teaId, year, courseId, roomId);
+        return JsonResult.success().set("imageList", imageList);
     }
 }

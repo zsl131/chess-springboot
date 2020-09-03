@@ -57,6 +57,21 @@ public class ClassImage {
     /** 状态，1-显示；0-不显示 */
     private String status;
 
+    /** 班级ID */
+    @Column(name = "room_id")
+    private Integer roomId;
+
+    /** 班级名称 */
+    @Column(name = "room_name")
+    private String roomName;
+
+    /** 学期 */
+    private String term;
+
+    /** 归属年份 */
+    @Column(name = "own_year")
+    private String ownYear;
+
     @Lob
     private String reply;
 
@@ -68,6 +83,38 @@ public class ClassImage {
 
     @Column(name = "reply_long")
     private Long replyLong;
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getOwnYear() {
+        return ownYear;
+    }
+
+    public void setOwnYear(String ownYear) {
+        this.ownYear = ownYear;
+    }
 
     public String getReply() {
         return reply;

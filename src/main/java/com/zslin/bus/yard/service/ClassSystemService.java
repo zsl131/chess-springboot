@@ -55,6 +55,13 @@ public class ClassSystemService {
     @Autowired
     private IGradeRoleSystemDao gradeRoleSystemDao;
 
+    /** 通过名称搜索体系 */
+    public JsonResult searchByTitle(String params) {
+        String title = JsonTools.getJsonParam(params, "title");
+        List<ClassSystem> systemList = classSystemDao.searchByTitle(title);
+        return JsonResult.success().set("systemList", systemList);
+    }
+
     /** 获取体系 */
     public JsonResult findSystem(String params) {
         Sort sort = SimpleSortBuilder.generateSort("orderNo_a");

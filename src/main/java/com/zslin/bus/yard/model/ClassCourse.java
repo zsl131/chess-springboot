@@ -82,6 +82,32 @@ public class ClassCourse {
     @Column(name = "img_url")
     private String imgUrl;
 
+    /** 授课目标，即情感目标 */
+    @Column(name = "teach_target")
+    @Lob
+    private String teachTarget;
+
+    /** 重点难点 */
+    @Column(name = "key_point")
+    @Lob
+    private String keyPoint;
+
+    public String getTeachTarget() {
+        return teachTarget;
+    }
+
+    public void setTeachTarget(String teachTarget) {
+        this.teachTarget = teachTarget;
+    }
+
+    public String getKeyPoint() {
+        return keyPoint;
+    }
+
+    public void setKeyPoint(String keyPoint) {
+        this.keyPoint = keyPoint;
+    }
+
     public Integer getOtherId() {
         return otherId;
     }

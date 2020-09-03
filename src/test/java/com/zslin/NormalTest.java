@@ -28,14 +28,13 @@ import com.zslin.bus.wx.tools.AccessTokenTools;
 import com.zslin.bus.wx.tools.InternetTools;
 import com.zslin.bus.wx.tools.JSApiTools;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
-import com.zslin.bus.yard.dao.IClassImageDao;
-import com.zslin.bus.yard.dao.IClassSystemDetailDao;
-import com.zslin.bus.yard.dao.IGradeRoleSystemDao;
-import com.zslin.bus.yard.dao.ITeacherRoleDao;
+import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.ClassImage;
 import com.zslin.bus.yard.model.ClassSystemDetail;
 import com.zslin.bus.yard.model.Grade;
+import com.zslin.bus.yard.model.TeacherClassroom;
 import com.zslin.bus.yard.tools.MyFileTools;
+import com.zslin.bus.yard.tools.TeachPlanTools;
 import com.zslin.test.ImageHandleTools;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -124,6 +123,25 @@ public class NormalTest {
 
     @Autowired
     private IActivityRecordImageDao activityRecordImageDao;
+
+    @Autowired
+    private ITeacherClassroomDao teacherClassroomDao;
+
+    @Autowired
+    private TeachPlanTools teachPlanTools;
+
+    @Test
+    public void test40() {
+        teachPlanTools.buildIndex(38);
+    }
+
+    @Test
+    public void test39() {
+        List<TeacherClassroom> list = teacherClassroomDao.queryByCourseId(142, "2021", 38);
+        for(TeacherClassroom c : list) {
+            System.out.println(c);
+        }
+    }
 
     @Test
     public void test38() {
