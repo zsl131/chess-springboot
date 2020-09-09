@@ -14,7 +14,7 @@ import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.wx.dao.IWxAccountDao;
 import com.zslin.bus.wx.model.WxAccount;
-import org.json.JSONArray;
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -235,8 +235,8 @@ public class StudentService {
         String objIds = JsonTools.getJsonParam(params, "objIds");
         JSONArray array = JsonTools.str2JsonArray(objIds);
         StringBuffer sb = new StringBuffer();
-        for(int i=0;i<array.length();i++) {
-            Integer stuId = array.getInt(i);
+        for(int i=0;i<array.size();i++) {
+            Integer stuId = array.getInteger(i);
             if(activityStudentDao.findByStuId(stuId).size()>0) {sb.append(studentDao.findStuName(stuId)).append( "存在报名记录；");}
             else {studentDao.deleteByOpenidAndId(openid, stuId);}
         }
@@ -256,8 +256,8 @@ public class StudentService {
 
         String objIds = JsonTools.getJsonParam(params, "objIds");
         JSONArray array = JsonTools.str2JsonArray(objIds);
-        for(int i=0;i<array.length();i++) {
-            Integer stuId = array.getInt(i);
+        for(int i=0;i<array.size();i++) {
+            Integer stuId = array.getInteger(i);
             if(activityStudentDao.findByStuIdAndRecordId(stuId, recordId)!=null) {continue;}
             ActivityStudent as = new ActivityStudent();
             Student stu = studentDao.findOne(stuId);

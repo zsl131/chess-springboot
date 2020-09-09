@@ -1,8 +1,8 @@
 package com.zslin.bus.common.tools;
 
 import com.zslin.bus.common.dto.AppUserDto;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +18,7 @@ public class JsonTools {
      */
     public static JSONObject str2JsonObj(String str)  {
         try {
-            JSONObject jsonObj = new JSONObject(str);
+            JSONObject jsonObj = JSONObject.parseObject(str);
             return jsonObj;
         } catch (Exception e) {
 //			throw new AppException("JSON数据格式化异常", AppConstant.ExceptionCode.JSON_FORMAT_EXCEPTION);
@@ -33,7 +33,7 @@ public class JsonTools {
      */
     public static JSONArray str2JsonArray(String str) {
         try {
-            JSONArray jsonArray = new JSONArray(str);
+            JSONArray jsonArray = JSONArray.parseArray(str);
             return jsonArray;
         } catch (Exception e) {
 //			throw new AppException("JSON数据格式化异常", AppConstant.ExceptionCode.JSON_FORMAT_EXCEPTION);
@@ -62,7 +62,7 @@ public class JsonTools {
             if(jsonStr.startsWith("[")) {
                 jsonStr = jsonStr.substring(1, jsonStr.length()-1);
             }
-            JSONObject jsonObj = new JSONObject(jsonStr);
+            JSONObject jsonObj = JSONObject.parseObject(jsonStr);
             Object obj = jsonObj.get(field);
             if(obj!=null) {result = obj.toString();}
         } catch (Exception e) {

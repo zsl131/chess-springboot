@@ -86,4 +86,30 @@ public class TeachPlan {
 
     /** 体系名称 */
     private String sname;
+
+    /** 知识点名称 */
+    @Column(name = "block_name")
+    private String blockName;
+
+    /** 序号 */
+    @Column(name = "order_no")
+    private Integer orderNo;
+
+    @Column(name = "create_day")
+    private String createDay;
+
+    @Column(name = "create_time")
+    private String createTime;
+
+    @Column(name = "create_long")
+    private Long createLong;
+
+    @Column(name = "update_day")
+    private String updateDay;
+
+    @Column(name = "update_time")
+    private String updateTime;
+
+    @Column(name = "update_long")
+    private Long updateLong;
 }

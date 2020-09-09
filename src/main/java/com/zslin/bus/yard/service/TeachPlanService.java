@@ -1,6 +1,8 @@
 package com.zslin.bus.yard.service;
 
 import com.zslin.basic.annotations.AdminAuth;
+import com.zslin.basic.repository.SimpleSortBuilder;
+import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
@@ -38,10 +40,11 @@ public class TeachPlanService {
         String year = teachPlanConfigTools.getCurYear(); //年份
         Integer courseId = JsonTools.getIntegerParams(params, "courseId"); //课程ID
         Integer teaId = JsonTools.getIntegerParams(params, "teaId"); //教师ID
-        TeachPlan plan = teachPlanDao.findOne(teaId, year, courseId);
+        List<TeachPlan> planList = teachPlanDao.findByTeacher(teaId, courseId, year,
+                SimpleSortBuilder.generateSort("orderNo_a"));
         //flag：获取到数据则为true，数据为null则为false
-        return JsonResult.success("获取成功").set("plan", plan).set("course", classCourseDao.findOne(courseId))
-                .set("flag", plan!=null);
+        return JsonResult.success("获取成功").set("planList", planList).set("course", classCourseDao.findOne(courseId))
+                .set("flag", (planList!=null&&planList.size()>0));
     }
 
     /**
@@ -53,11 +56,16 @@ public class TeachPlanService {
         String year = teachPlanConfigTools.getCurYear(); //年份
         Integer courseId = JsonTools.getIntegerParams(params, "courseId"); //课程ID
         Integer teaId = JsonTools.getIntegerParams(params, "teaId"); //教师ID
-        TeachPlan plan = teachPlanDao.findOne(teaId, year, courseId);
+        Integer id = JsonTools.getId(params);
+        TeachPlan plan = null;
+        if(id>0) {plan = teachPlanDao.findOne(id);} //如果有ID
+
+//        TeachPlan plan = teachPlanDao.findOne(teaId, year, courseId);
 
         String guide = JsonTools.getJsonParam(params, "guide"); //课程导入
         String teachStep = JsonTools.getJsonParam(params, "teachStep"); //授课过程
         String nextTeach = JsonTools.getJsonParam(params, "nextTeach"); //过渡下一课程
+        String blockName = JsonTools.getJsonParam(params, "blockName"); //知识点名称
         if(plan==null) {
             plan = new TeachPlan();
             ClassCourse course = classCourseDao.findOne(courseId);
@@ -89,12 +97,27 @@ public class TeachPlanService {
             plan.setTeaId(teacher.getId());
             plan.setTeaName(teacher.getName());
             plan.setTeaPhone(teacher.getPhone());
+            plan.setOrderNo(queryMaxOrderNo(teaId, courseId, year) + 1);
+            plan.setCreateDay(NormalTools.curDate());
+            plan.setCreateTime(NormalTools.curDatetime());
+            plan.setCreateLong(System.currentTimeMillis());
         }
         plan.setGuide(guide);
         plan.setTeachStep(teachStep);
         plan.setNextTeach(nextTeach);
+        plan.setBlockName(blockName);
+
+        plan.setUpdateDay(NormalTools.curDate());
+        plan.setUpdateTime(NormalTools.curDatetime());
+        plan.setUpdateLong(System.currentTimeMillis());
         teachPlanDao.save(plan);
         return JsonResult.success("保存成功").set("plan", plan);
+    }
+
+    private Integer queryMaxOrderNo(Integer teaId, Integer courseId, String year) {
+        Integer orderNo = teachPlanDao.queryMaxOrderNo(teaId, courseId, year);
+        if(orderNo==null) {orderNo = 0;}
+        return orderNo;
     }
 
     private TeacherClassroom queryClassroom(Integer courseId, String year, Integer teaId) {
@@ -109,5 +132,17 @@ public class TeachPlanService {
         String year = teachPlanConfigTools.getCurYear();
         List<TeacherClassroom> list = teacherClassroomDao.queryByCourseId(courseId, year, teaId);
         return JsonResult.success().set("classroomList", list);
+    }
+
+    public JsonResult loadOne(String params) {
+        Integer id = JsonTools.getId(params);
+        TeachPlan plan = teachPlanDao.findOne(id);
+        return JsonResult.succ(plan);
+    }
+
+    public JsonResult delete(String params) {
+        Integer id = JsonTools.getId(params);
+        teachPlanDao.delete(id);
+        return JsonResult.success("删除成功");
     }
 }

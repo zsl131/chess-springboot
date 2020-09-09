@@ -4,12 +4,13 @@ import com.zslin.basic.repository.SimpleSpecificationBuilder;
 import com.zslin.basic.repository.SpecificationOperator;
 import com.zslin.bus.common.dto.QueryListConditionDto;
 import com.zslin.bus.common.dto.QueryListDto;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by zsl on 2018/7/10.
@@ -39,12 +40,12 @@ public class QueryTools<T> {
 
         Integer page = 0;
         try {
-            page = paramObj.getInt("page");
+            page = paramObj.getInteger("page");
         } catch (Exception e) {
         }
         Integer size = 15;
         try {
-            size = paramObj.getInt("size");
+            size = paramObj.getInteger("size");
         } catch (Exception e) {
         }
         String sort = null;
@@ -66,9 +67,9 @@ public class QueryTools<T> {
             try {
 //                JSONArray jsonArray = JsonTools.str2JsonArray(conditions);
                 JSONObject jsonObj = JsonTools.str2JsonObj(conditions);
-                Iterator keys = jsonObj.keys();
-                while(keys.hasNext()) {
-                    String keyAndMatch = (String) keys.next();
+                Set<String> keys = jsonObj.keySet();
+                for(String keyAndMatch : keys) {
+//                    String keyAndMatch = (String) keys.next();
                     String key , match ;
                     if(keyAndMatch.indexOf("_")>0) {
                         key = keyAndMatch.split("_")[0];

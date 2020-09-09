@@ -24,8 +24,8 @@ import com.zslin.bus.wx.annotations.HasTemplateMessage;
 import com.zslin.bus.wx.annotations.TemplateMessageAnnotation;
 import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.tools.TemplateMessageTools;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -157,20 +157,20 @@ public class FinanceRecordService {
         } catch (Exception e) {
         }
         Float totalAmount = 0f;
-        Integer totalCount = detailArray.length();
+        Integer totalCount = detailArray.size();
         Integer ticketCount = 0;
-        for(int i=0;i<detailArray.length();i++) {
+        for(int i=0;i<detailArray.size();i++) {
             JSONObject jsonObj = detailArray.getJSONObject(i);
             JSONArray picArray = jsonObj.getJSONArray("tickets"); //图片
-            Integer cateId = jsonObj.getInt("cateId"); //分类ID
+            Integer cateId = jsonObj.getInteger("cateId"); //分类ID
             String cateName = jsonObj.getString("cateName");
             Float price = Float.parseFloat(jsonObj.get("price").toString());
-            Integer count = jsonObj.getInt("count");
+            Integer count = jsonObj.getInteger("count");
             String recordDate = jsonObj.getString("recordDate").replaceAll("-", "");
             String title = jsonObj.getString("title");
             FinanceDetail fd = new FinanceDetail();
             fd.setRecordDate(recordDate);
-            fd.setTicketCount(picArray.length());
+            fd.setTicketCount(picArray.size());
             fd.setAmount(price * count);
             fd.setCateName(cateName);
             fd.setCateId(cateId);
@@ -194,7 +194,7 @@ public class FinanceRecordService {
             ticketCount += fd.getTicketCount();
             financeDetailDao.save(fd);
             totalAmount += fd.getAmount(); //合计金额
-            for(int j=0;j<picArray.length();j++) {
+            for(int j=0;j<picArray.size();j++) {
                 FinanceTicket ft = new FinanceTicket();
                 ft.setDetailId(fd.getId());
                 ft.setTicketNo(noDto.getNo());

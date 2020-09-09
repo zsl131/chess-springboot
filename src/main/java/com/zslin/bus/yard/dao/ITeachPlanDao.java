@@ -23,6 +23,12 @@ public interface ITeachPlanDao extends BaseRepository<TeachPlan, Integer>, JpaSp
     @Query("FROM TeachPlan t WHERE t.teaId=?1 AND t.planYear=?2")
     List<TeachPlan> findByTeacher(Integer teaId, String year, Sort sort);
 
+    @Query("FROM TeachPlan t WHERE t.teaId=?1 AND t.courseId=?2 AND t.planYear=?3 ")
+    List<TeachPlan> findByTeacher(Integer teaId, Integer courseId, String year, Sort sort);
+
+    @Query("SELECT MAX(t.orderNo) FROM TeachPlan t WHERE t.teaId=?1 AND t.courseId=?2 AND t.planYear=?3")
+    Integer queryMaxOrderNo(Integer teaId, Integer courseId, String year);
+
     /**
      * 获取教师对应课程的教案
      * @param teaId 教师ID
@@ -30,6 +36,6 @@ public interface ITeachPlanDao extends BaseRepository<TeachPlan, Integer>, JpaSp
      * @param courseId 课程
      * @return
      */
-    @Query("FROM TeachPlan t WHERE t.teaId=?1 AND t.planYear=?2 AND t.courseId=?3")
-    TeachPlan findOne(Integer teaId, String year, Integer courseId);
+    /*@Query("FROM TeachPlan t WHERE t.teaId=?1 AND t.planYear=?2 AND t.courseId=?3")
+    TeachPlan findOne(Integer teaId, String year, Integer courseId);*/
 }
