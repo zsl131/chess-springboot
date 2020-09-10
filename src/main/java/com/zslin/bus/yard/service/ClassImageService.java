@@ -66,7 +66,7 @@ public class ClassImageService {
     }
 
     public JsonResult queryByTea(String params) {
-        System.out.println(params);
+        //System.out.println(params);
         Integer courseId = JsonTools.getIntegerParams(params, "courseId");
         Integer teaId = JsonTools.getIntegerParams(params, "teaId");
         Integer roomId = JsonTools.getIntegerParams(params, "roomId");
@@ -74,5 +74,20 @@ public class ClassImageService {
 
         List<ClassImage> imageList = classImageDao.findByTea(teaId, year, courseId, roomId);
         return JsonResult.success().set("imageList", imageList);
+    }
+
+    /** 删除图像 */
+    public JsonResult deleteByTea(String params) {
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        Integer id = JsonTools.getId(params);
+        ClassImage ci = classImageDao.findOne(id);
+        String msg = "删除成功";
+        String flag = "1";
+        if(ci.getTeaId().equals(teaId)) {
+            classImageDao.delete(id);
+        } else {
+            msg = "你无权删除此图像"; flag = "0";
+        }
+        return JsonResult.success(msg).set("flag", flag);
     }
 }
