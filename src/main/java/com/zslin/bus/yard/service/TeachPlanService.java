@@ -35,16 +35,20 @@ public class TeachPlanService {
     @Autowired
     private ITeacherClassroomDao teacherClassroomDao;
 
+    @Autowired
+    private ITeachPlanFlagDao teachPlanFlagDao;
+
     /** 查找对应课程的教案 */
     public JsonResult queryPlan(String params) {
         String year = teachPlanConfigTools.getCurYear(); //年份
         Integer courseId = JsonTools.getIntegerParams(params, "courseId"); //课程ID
         Integer teaId = JsonTools.getIntegerParams(params, "teaId"); //教师ID
+        TeachPlanFlag tpf = teachPlanFlagDao.queryOne(teaId, courseId, year);
         List<TeachPlan> planList = teachPlanDao.findByTeacher(teaId, courseId, year,
                 SimpleSortBuilder.generateSort("orderNo_a"));
         //flag：获取到数据则为true，数据为null则为false
         return JsonResult.success("获取成功").set("planList", planList).set("course", classCourseDao.findOne(courseId))
-                .set("flag", (planList!=null&&planList.size()>0));
+                .set("flag", (planList!=null&&planList.size()>0)).set("planFlag", tpf);
     }
 
     /**
@@ -144,5 +148,31 @@ public class TeachPlanService {
         Integer id = JsonTools.getId(params);
         teachPlanDao.delete(id);
         return JsonResult.success("删除成功");
+    }
+
+    /** 修改教案状态 */
+    public JsonResult updateFlag(String params) {
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        Integer courseId = JsonTools.getIntegerParams(params, "courseId");
+        String flag = JsonTools.getJsonParam(params, "flag");
+        String year = teachPlanConfigTools.getCurYear();
+
+        TeachPlanFlag tpf = teachPlanFlagDao.queryOne(teaId, courseId, year);
+        if(tpf==null) {
+            tpf = new TeachPlanFlag();
+            Teacher tea = teacherDao.findOne(teaId);
+            ClassCourse cc = classCourseDao.findOne(courseId);
+            tpf.setCourseId(cc.getId());
+            tpf.setCourseTitle(cc.getTitle());
+            tpf.setPlanYear(year);
+            tpf.setSchId(tea.getSchoolId());
+            tpf.setSchName(tpf.getSchName());
+            tpf.setTeaId(teaId);
+            tpf.setTeaName(tea.getName());
+            tpf.setTeaPhone(tea.getPhone());
+        }
+        tpf.setFlag(flag);
+        teachPlanFlagDao.save(tpf);
+        return JsonResult.success("保存成功").set("planFlag", tpf);
     }
 }
