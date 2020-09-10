@@ -27,6 +27,7 @@ import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.common.tools.TeacherLoginTools;
 import com.zslin.bus.tools.JsonResult;
+import com.zslin.bus.yard.dao.ITeacherDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private AppUserLoginTools appUserLoginTools;
+
+    @Autowired
+    private ITeacherDao teacherDao;
 
     @AdminAuth(name = "用户列表", orderNum = 1)
     public JsonResult listUser(String params) {
@@ -236,9 +240,12 @@ public class UserService implements IUserService {
             if(!SecurityUtil.md5(username, oldPwd).equals(user.getPassword())) {
                 return JsonResult.error("原始密码输入错误");
             }
+            String pwd = SecurityUtil.md5(username, password);
             user.setNickname(nickname);
-            user.setPassword(SecurityUtil.md5(username, password));
+
+            user.setPassword(pwd);
             userDao.save(user);
+            teacherDao.updatePwd(pwd, username); //修改教师的密码
             return JsonResult.success("修改成功");
         } catch (Exception e) {
             e.printStackTrace();

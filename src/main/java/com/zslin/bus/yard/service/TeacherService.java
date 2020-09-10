@@ -3,6 +3,7 @@ package com.zslin.bus.yard.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zslin.basic.annotations.AdminAuth;
+import com.zslin.basic.dao.IUserDao;
 import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.MyBeanUtils;
@@ -51,6 +52,9 @@ public class TeacherService {
 
     @Autowired
     private IGradeDao gradeDao;
+
+    @Autowired
+    private IUserDao userDao;
 
     /**
      * 设置是否是测试用户
@@ -197,6 +201,7 @@ public class TeacherService {
             String phone = JsonTools.getJsonParam(params, "phone");
             String pwd = SecurityUtil.md5(phone, phone.substring(phone.length()-6));
             teacherDao.updatePwd(pwd, id);
+            userDao.updatePhone(pwd, phone);
             return JsonResult.success("初始化密码成功");
         } catch (Exception e) {
             return JsonResult.error("初始失败："+e.getMessage());

@@ -23,4 +23,9 @@ public interface IUserDao extends JpaRepository<User, Integer>, JpaSpecification
     @Modifying
     @Transactional
     void updatePhone(String username, String phone);
+
+    @Query("UPDATE User u SET u.password=?1 WHERE u.username=?2")
+    @Modifying
+    @Transactional
+    void updatePwd(String pwd, String username);
 }

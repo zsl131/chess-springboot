@@ -84,23 +84,39 @@ public class TeachPlanTools {
                 classroomList = rebuild(classroomList);
             }
             //教师所管辖的体系ID
-            List<Integer> systemIds = buildSystemIds(classroomList);
+            //List<Integer> systemIds = buildSystemIds(classroomList);
 
             List<PlanCourseDto> result = new ArrayList<>();
-            for(Integer sid : systemIds) {
-                List<ClassSystemDetail> detailList = classSystemDetailDao.findBySid(sid, SimpleSortBuilder.generateSort("orderNo", "sectionNo"));
-                TeacherClassroom room = queryClassroom(classroomList, sid);
-                List<ClassCourse> courseList = buildCourse(detailList);
-                List<Integer> courseIds = buildCourseIds(courseList);
-                result.add(new PlanCourseDto(room, sid, room.getId(), courseList, courseIds));
+            for(TeacherClassroom tc : classroomList) {
+                Integer sid = tc.getSid();
+                PlanCourseDto pcd = query(result, sid);
+                if(pcd==null) {
+                    List<ClassSystemDetail> detailList = classSystemDetailDao.findBySid(sid, SimpleSortBuilder.generateSort("orderNo", "sectionNo"));
+                    List<ClassCourse> courseList = buildCourse(detailList);
+                    List<Integer> courseIds = buildCourseIds(courseList);
+                    result.add(new PlanCourseDto(tc, sid, tc.getId(), courseList, courseIds));
+                } else {
+//                    pcd.setClassroom(tc);
+//                    pcd.setClassroomId(tc.getId());
+                    result.add(new PlanCourseDto(tc, sid, tc.getId(), pcd.getCourseList(), pcd.getCourseIds()));
+                }
             }
             return result;
+
             //classSystemDetailDao.findAll(ssb.generate(), SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("orderNo", "sectionNo")));
 //            List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds, SimpleSortBuilder.generateSort("orderNo", "sectionNo"));
 //            return buildCourseDto(classroomList, detailList);
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    private PlanCourseDto query(List<PlanCourseDto> list, Integer sid) {
+        PlanCourseDto res = null;
+        for(PlanCourseDto pcd : list) {
+            if(pcd.getSid().equals(sid)) {res = pcd; break;}
+        }
+        return res;
     }
 
     private List<Integer> buildCourseIds(List<ClassCourse> courseList) {

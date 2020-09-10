@@ -26,6 +26,11 @@ public interface ITeacherDao extends BaseRepository<Teacher, Integer>, JpaSpecif
     @Transactional
     void updatePwd(String pwd, Integer id);
 
+    @Query("UPDATE Teacher t SET t.password=?1 WHERE t.phone=?2")
+    @Modifying
+    @Transactional
+    void updatePwd(String pwd, String phone);
+
     @Query("UPDATE Teacher t SET t.isTest=?1 WHERE t.id=?2")
     @Modifying
     @Transactional

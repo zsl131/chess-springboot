@@ -64,7 +64,7 @@ public class ApiController {
 //        String loginToken = request.getHeader("login-token"); //登陆token
 //        System.out.println("---------"+loginToken);
         AppUserDto userDto = JsonTools.buildUserDto(request); //用户信息
-        System.out.println(userDto);
+//        System.out.println(userDto);
         if(token == null || "".equals(token) || apiCode==null || "".equals(apiCode)) {
             return JsonResult.getInstance().fail("auth-token或api-code为空");
         }

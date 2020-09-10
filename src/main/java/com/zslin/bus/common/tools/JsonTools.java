@@ -1,8 +1,8 @@
 package com.zslin.bus.common.tools;
 
-import com.zslin.bus.common.dto.AppUserDto;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zslin.bus.common.dto.AppUserDto;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -110,6 +110,16 @@ public class JsonTools {
             return res;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** 获取用户ID */
+    public static Integer getUserId(String params) {
+        try {
+            Integer userid = Integer.parseInt(getHeaderParams(params, "userid"));
+            return userid;
+        } catch (Exception e) {
             return null;
         }
     }

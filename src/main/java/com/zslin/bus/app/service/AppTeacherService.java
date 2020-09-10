@@ -1,7 +1,9 @@
 package com.zslin.bus.app.service;
 
+import com.zslin.basic.dao.IUserDao;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.SecurityUtil;
+import com.zslin.bus.common.dto.AppUserDto;
 import com.zslin.bus.common.tools.AppUserLoginTools;
 import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.tools.JsonResult;
@@ -9,6 +11,8 @@ import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.ClassSystem;
 import com.zslin.bus.yard.model.ClassTag;
 import com.zslin.bus.yard.model.Teacher;
+import com.zslin.bus.yard.model.TeacherClassroom;
+import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +42,26 @@ public class AppTeacherService {
 
     @Autowired
     private AppUserLoginTools appUserLoginTools;
+
+    @Autowired
+    private IUserDao userDao;
+
+    @Autowired
+    private ITeacherClassroomDao teacherClassroomDao;
+
+    @Autowired
+    private TeachPlanConfigTools teachPlanConfigTools;
+
+    /** 获取教师管理的班级 */
+    public JsonResult queryClassroom(String params) {
+        //System.out.println(params);
+        Integer teaId = JsonTools.getUserId(params);
+        //System.out.println("-------->"+teaId);
+//        AppUserDto userDto = JsonTools.buildUserDto()
+        String year = teachPlanConfigTools.getCurYear();
+        List<TeacherClassroom> classroomList = teacherClassroomDao.findByTargetYearAndTeaId(year, teaId);
+        return JsonResult.success().set("classroomList", classroomList);
+    }
 
     /**
      * 获取教师所可访问的年级
@@ -111,6 +135,7 @@ public class AppTeacherService {
             }
             rePwd = SecurityUtil.md5(phone, rePwd);
             teacherDao.updatePwd(rePwd, id);
+            userDao.updatePwd(rePwd, phone);
             return JsonResult.success("密码修改成功").set("flag", "1");
         } catch (Exception e) {
             return JsonResult.error(e.getMessage());
