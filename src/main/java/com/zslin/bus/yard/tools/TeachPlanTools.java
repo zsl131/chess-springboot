@@ -50,7 +50,7 @@ public class TeachPlanTools {
         //教师所管辖的体系ID
         List<Integer> systemIds = buildSystemIds(classroomList);
 
-        List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds);
+        List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds, SimpleSortBuilder.generateSort("orderNo"));
 
         //课程列表
 //        List<ClassCourse> courseList = buildCourse(detailList);
@@ -86,7 +86,7 @@ public class TeachPlanTools {
             //教师所管辖的体系ID
             List<Integer> systemIds = buildSystemIds(classroomList);
 
-            List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds);
+            List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds, SimpleSortBuilder.generateSort("orderNo"));
             return buildCourseDto(classroomList, detailList);
         } catch (Exception e) {
             return new ArrayList<>();

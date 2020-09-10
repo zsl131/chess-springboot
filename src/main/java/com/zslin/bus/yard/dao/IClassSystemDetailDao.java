@@ -31,5 +31,5 @@ public interface IClassSystemDetailDao extends BaseRepository<ClassSystemDetail,
     List<Integer> findIdsByCourseId(Integer cid);
 
     @Query("FROM ClassSystemDetail c WHERE c.sid IN(?1)")
-    List<ClassSystemDetail> findByIds(List<Integer> ids);
+    List<ClassSystemDetail> findByIds(List<Integer> ids, Sort sort);
 }

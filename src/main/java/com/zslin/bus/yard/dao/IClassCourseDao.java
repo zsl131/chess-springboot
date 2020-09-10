@@ -2,6 +2,7 @@ package com.zslin.bus.yard.dao;
 
 import com.zslin.basic.repository.BaseRepository;
 import com.zslin.bus.yard.model.ClassCourse;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

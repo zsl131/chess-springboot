@@ -175,4 +175,14 @@ public class TeachPlanService {
         teachPlanFlagDao.save(tpf);
         return JsonResult.success("保存成功").set("planFlag", tpf);
     }
+
+    /** 获取教师对应课程所有已写教案 */
+    public JsonResult listPlan(String params) {
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        Integer courseId = JsonTools.getIntegerParams(params, "courseId");
+        String year = teachPlanConfigTools.getCurYear();
+
+        List<TeachPlan> planList = teachPlanDao.findByTeacher(teaId, courseId, year, SimpleSortBuilder.generateSort("orderNo_a"));
+        return JsonResult.success().set("planList", planList);
+    }
 }
