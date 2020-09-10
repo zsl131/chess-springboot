@@ -1,14 +1,13 @@
 package com.zslin.bus.common.tools;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zslin.basic.repository.SimpleSpecificationBuilder;
 import com.zslin.basic.repository.SpecificationOperator;
 import com.zslin.bus.common.dto.QueryListConditionDto;
 import com.zslin.bus.common.dto.QueryListDto;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,16 +37,24 @@ public class QueryTools<T> {
 //        System.out.println("====buildQueryListDto:::"+params);
         JSONObject paramObj = JsonTools.str2JsonObj(params);
 
-        Integer page = 0;
+        /*Integer page = 0;
         try {
             page = paramObj.getInteger("page");
         } catch (Exception e) {
+            page = 0;
         }
         Integer size = 15;
         try {
             size = paramObj.getInteger("size");
         } catch (Exception e) {
+            e.printStackTrace();
+            size = 15;
         }
+        System.out.println("---------->size::"+size);*/
+        Integer page = paramObj.getInteger("page");
+        Integer size = paramObj.getInteger("size");
+        page = page==null?0:page; size = size==null?15:size;
+
         String sort = null;
         try {
             sort = paramObj.getString("sort");

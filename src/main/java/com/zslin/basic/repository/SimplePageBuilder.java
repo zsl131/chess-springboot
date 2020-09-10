@@ -14,6 +14,7 @@ public class SimplePageBuilder {
     public static Pageable generate(Integer page, Integer size, Sort sort) {
         page = page == null? 0:page;
         if(sort==null) return new PageRequest(page, size);
+        //System.out.println("--->SimplePageBuilder:: size::"+size+", page::"+page);
         return new PageRequest(page, size, sort);
     }
 
