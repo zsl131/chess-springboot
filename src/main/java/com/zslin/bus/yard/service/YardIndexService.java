@@ -48,6 +48,9 @@ public class YardIndexService {
     @Autowired
     private ClassImageTools classImageTools;
 
+    @Autowired
+    private ITeachPlanFlagDao teachPlanFlagDao;
+
     public JsonResult index(String params) {
         Integer teaId = JsonTools.getIntegerParams(params, "teaId");
         Teacher tea = teacherDao.findOne(teaId);
@@ -64,7 +67,7 @@ public class YardIndexService {
         //按班级来
         List<PlanCourseDto> roomCourseList = teachPlanTools.queryCourseDto(classroomList, false);
 
-        List<TeachPlan> planList = null;
+        /*List<TeachPlan> planList = null;
         List<ClassImageDto> imageList = null;
         try {
             TeacherClassroom classroom = classroomList.get(0);
@@ -72,14 +75,23 @@ public class YardIndexService {
 
             imageList = classImageTools.build(teaId, classroom.getTargetYear(), classroomList);
         } catch (Exception e) {
-        }
+        }*/
 
+        List<TeachPlanFlag> planFlagList = null;
+        List<ClassImageDto> imageList = null;
+        try {
+            TeacherClassroom classroom = classroomList.get(0);
+            planFlagList = teachPlanFlagDao.findByTea(teaId, classroom.getTargetYear());
+
+            imageList = classImageTools.build(teaId, classroom.getTargetYear(), classroomList);
+        } catch (Exception e) {
+        }
 
         List<YardNotice> noticeList = yardNoticeDao.findShow(SimpleSortBuilder.generateSort("orderNo_a"));
         return JsonResult.success().set("classroomList", classroomList)
                 .set("teacher", tea).set("noticeList", noticeList)
                 .set("courseDtoList", courseDtoList)
-                .set("planList", planList).set("roomCourseList", roomCourseList)
+                .set("planFlagList", planFlagList).set("roomCourseList", roomCourseList)
                 .set("imageList", imageList);
     }
 }

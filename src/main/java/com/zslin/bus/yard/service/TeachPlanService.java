@@ -11,6 +11,7 @@ import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -133,8 +134,15 @@ public class TeachPlanService {
     public JsonResult queryClassroom(String params) {
         Integer courseId = JsonTools.getIntegerParams(params, "courseId");
         Integer teaId = JsonTools.getIntegerParams(params, "teaId");
-        String year = teachPlanConfigTools.getCurYear();
-        List<TeacherClassroom> list = teacherClassroomDao.queryByCourseId(courseId, year, teaId);
+        Integer classroomId = JsonTools.getIntegerParams(params, "classroomId");
+        List<TeacherClassroom> list = null;
+        if(classroomId!=null && classroomId>0) {
+            list = new ArrayList<>();
+            list.add(teacherClassroomDao.findOne(classroomId));
+        } else {
+            String year = teachPlanConfigTools.getCurYear();
+            list = teacherClassroomDao.queryAllByCourseId(courseId, year, teaId);
+        }
         return JsonResult.success().set("classroomList", list);
     }
 
@@ -166,7 +174,7 @@ public class TeachPlanService {
             tpf.setCourseTitle(cc.getTitle());
             tpf.setPlanYear(year);
             tpf.setSchId(tea.getSchoolId());
-            tpf.setSchName(tpf.getSchName());
+            tpf.setSchName(tea.getSchoolName());
             tpf.setTeaId(teaId);
             tpf.setTeaName(tea.getName());
             tpf.setTeaPhone(tea.getPhone());

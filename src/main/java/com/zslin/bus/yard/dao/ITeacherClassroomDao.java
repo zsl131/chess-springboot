@@ -23,5 +23,6 @@ public interface ITeacherClassroomDao extends BaseRepository<TeacherClassroom, I
     @Query("SELECT t FROM TeacherClassroom t, SystemCourse c WHERE c.sid=t.sid AND t.targetYear=?2 AND t.teaId=?3 AND c.cid=?1 GROUP BY t.sid")
     List<TeacherClassroom> queryByCourseId(Integer cid, String targetYear, Integer teaId);
 
-//    List<TeacherClassroom> queyrB
+    @Query("SELECT t FROM TeacherClassroom t, SystemCourse c WHERE c.sid=t.sid AND t.targetYear=?2 AND t.teaId=?3 AND c.cid=?1 ")
+    List<TeacherClassroom> queryAllByCourseId(Integer cid, String targetYear, Integer teaId);
 }

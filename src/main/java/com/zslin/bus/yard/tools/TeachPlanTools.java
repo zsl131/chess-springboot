@@ -86,11 +86,62 @@ public class TeachPlanTools {
             //教师所管辖的体系ID
             List<Integer> systemIds = buildSystemIds(classroomList);
 
-            List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds, SimpleSortBuilder.generateSort("orderNo"));
-            return buildCourseDto(classroomList, detailList);
+            List<PlanCourseDto> result = new ArrayList<>();
+            for(Integer sid : systemIds) {
+                List<ClassSystemDetail> detailList = classSystemDetailDao.findBySid(sid, SimpleSortBuilder.generateSort("orderNo", "sectionNo"));
+                TeacherClassroom room = queryClassroom(classroomList, sid);
+                List<ClassCourse> courseList = buildCourse(detailList);
+                List<Integer> courseIds = buildCourseIds(courseList);
+                result.add(new PlanCourseDto(room, sid, room.getId(), courseList, courseIds));
+            }
+            return result;
+            //classSystemDetailDao.findAll(ssb.generate(), SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("orderNo", "sectionNo")));
+//            List<ClassSystemDetail> detailList = classSystemDetailDao.findByIds(systemIds, SimpleSortBuilder.generateSort("orderNo", "sectionNo"));
+//            return buildCourseDto(classroomList, detailList);
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    private List<Integer> buildCourseIds(List<ClassCourse> courseList) {
+        List<Integer> result = new ArrayList<>();
+        for(ClassCourse cc : courseList) {result.add(cc.getId());}
+        return result;
+    }
+
+    private List<ClassCourse> buildCourse(List<ClassSystemDetail> detailList) {
+        if(detailList==null || detailList.size()<=0) {return new ArrayList<>();}
+        List<Integer> ids = detailList.stream().map(ClassSystemDetail::getCourseId).collect(Collectors.toList());
+        ids = rebuildIds(ids); //去除null
+        List<ClassCourse> list = classCourseDao.findByIds(ids);
+        List<ClassCourse> result = new ArrayList<>();
+        for(ClassSystemDetail csd : detailList) { //排序
+//            System.out.println(csd.getName());
+            for(ClassCourse cc : list) {
+                try { //避免null导致的异常
+                    if(csd.getCourseId().equals(cc.getId())) {
+                        result.add(cc);
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+        return result;
+    }
+
+    //去除null
+    private List<Integer> rebuildIds(List<Integer> ids) {
+        List<Integer> result = new ArrayList<>();
+        for(Integer id : ids) {
+            if(id!=null && id>0) {result.add(id);}
+        }
+        return result;
+    }
+
+    private TeacherClassroom queryClassroom(List<TeacherClassroom> classroomList, int sid) {
+        TeacherClassroom res = null;
+        for(TeacherClassroom tc : classroomList) {if(sid==tc.getSid()) {res = tc; break;}}
+        return res;
     }
 
     /** 获取教师对应的课程 */

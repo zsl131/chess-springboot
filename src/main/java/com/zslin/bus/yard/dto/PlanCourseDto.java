@@ -23,6 +23,14 @@ public class PlanCourseDto {
 
     private List<Integer> courseIds;
 
+    public PlanCourseDto(TeacherClassroom classroom, Integer sid, Integer classroomId, List<ClassCourse> courseList, List<Integer> courseIds) {
+        this.classroom = classroom;
+        this.sid = sid;
+        this.classroomId = classroomId;
+        this.courseList = courseList;
+        this.courseIds = courseIds;
+    }
+
     public PlanCourseDto(TeacherClassroom classroom) {
         this.classroom = classroom;
         this.sid = classroom.getSid();
