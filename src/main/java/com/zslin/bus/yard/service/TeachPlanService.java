@@ -1,14 +1,18 @@
 package com.zslin.bus.yard.service;
 
 import com.zslin.basic.annotations.AdminAuth;
+import com.zslin.basic.repository.SimplePageBuilder;
 import com.zslin.basic.repository.SimpleSortBuilder;
 import com.zslin.basic.tools.NormalTools;
+import com.zslin.bus.common.dto.QueryListDto;
 import com.zslin.bus.common.tools.JsonTools;
+import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.*;
 import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,6 +42,14 @@ public class TeachPlanService {
 
     @Autowired
     private ITeachPlanFlagDao teachPlanFlagDao;
+
+    public JsonResult list(String params) {
+        QueryListDto qld = QueryTools.buildQueryListDto(params);
+        Page<TeachPlan> res = teachPlanDao.findAll(QueryTools.getInstance().buildSearch(qld.getConditionDtoList()),
+                SimplePageBuilder.generate(qld.getPage(), qld.getSize(), SimpleSortBuilder.generateSort(qld.getSort())));
+
+        return JsonResult.getInstance().set("size", res.getTotalElements()).set("data", res.getContent());
+    }
 
     /** 查找对应课程的教案 */
     public JsonResult queryPlan(String params) {
@@ -150,6 +162,17 @@ public class TeachPlanService {
         Integer id = JsonTools.getId(params);
         TeachPlan plan = teachPlanDao.findOne(id);
         return JsonResult.succ(plan);
+    }
+
+    /** 获取教师某课程的教案 */
+    public JsonResult listByCourse(String params) {
+        Integer courseId = JsonTools.getIntegerParams(params, "courseId");
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        String year = JsonTools.getJsonParam(params, "year");
+        Integer id = JsonTools.getId(params);
+        List<TeachPlan> planList = teachPlanDao.findByTeacher(teaId, courseId, year, SimpleSortBuilder.generateSort("orderNo_a"));
+
+        return JsonResult.success().set("planList", planList).set("curId", id);
     }
 
     public JsonResult delete(String params) {
