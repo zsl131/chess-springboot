@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zsl on 2018/7/3.
@@ -49,6 +51,17 @@ public class ApiController {
     @Autowired
     private AppUserLoginTools appUserLoginTools;
 
+    private boolean ignoreCheck(String apiCode) {
+        List<String> apiList = new ArrayList<>();
+        apiList.add("login");
+        apiList.add("checkUpdate");
+        boolean res = false;
+        for(String api:apiList) {
+            if(apiCode.contains(api)) {res = true; break;}
+        }
+        return res;
+    }
+
     /**
      * 此接口调用的业务接口有一个名为"handle"的方法，此方法接受两个String类型的参数action和params
      *  - action - 具体的处理业务
@@ -68,9 +81,9 @@ public class ApiController {
         if(token == null || "".equals(token) || apiCode==null || "".equals(apiCode)) {
             return JsonResult.getInstance().fail("auth-token或api-code为空");
         }
-        System.out.println("ApiController--> apiCode:"+apiCode+", userDto: "+userDto.toString());
+        System.out.println("ApiController--> apiCode:"+apiCode+", ignore:"+ignoreCheck(apiCode)+", userDto: "+userDto.toString());
         //检测token是否有效
-        if(!apiCode.contains("login") && !appUserLoginTools.checkLogin(userDto.getPhone(), userDto.getToken())) {
+        if(!ignoreCheck(apiCode) && !appUserLoginTools.checkLogin(userDto.getPhone(), userDto.getToken())) {
             return JsonResult.getInstance().fail("用户登陆失效，请重新登陆").set("login", "timeout");
         }
         try {
