@@ -10,7 +10,6 @@ import com.zslin.bus.qiniu.tools.QiniuUploadTools;
 import com.zslin.bus.yard.dao.*;
 import com.zslin.bus.yard.model.*;
 import com.zslin.bus.yard.tools.MyFileTools;
-import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +59,6 @@ public class AppUploadController {
     @Autowired
     private ITeacherClassroomDao teacherClassroomDao;
 
-    @Autowired
-    private TeachPlanConfigTools teachPlanConfigTools;
-
     /**
      * 上传课堂照片
      * @param multipartFile
@@ -71,7 +67,8 @@ public class AppUploadController {
      * @return
      */
     @RequestMapping(value = "classImage")
-    public UploadResult classImage(@RequestParam("files") MultipartFile[] multipartFile, String phone, Integer courseId, Integer roomId) {
+    public UploadResult classImage(@RequestParam("files") MultipartFile[] multipartFile, String phone,
+                                   Integer courseId, Integer roomId, String year) {
         UploadResult result = new UploadResult(0);
         try {
             if(multipartFile!=null && multipartFile.length>=1) {
@@ -94,7 +91,7 @@ public class AppUploadController {
 
                     Thumbnails.of(outFile).size(600, 600).toFile(outFile);
 
-                    qiniuUploadTools.upload(file.getInputStream(), key);
+                    qiniuUploadTools.upload(FileUtils.openInputStream(outFile), key);
                     outFile.delete(); //传到七牛就删除本地
                 } else if("2".equals(type)) { //是视频
                     //String key = System.currentTimeMillis() + fileType.toLowerCase();
@@ -122,7 +119,7 @@ public class AppUploadController {
 
                 ci.setRoomId(roomId);
                 ci.setRoomName(classroom.getRoomName());
-                ci.setOwnYear(teachPlanConfigTools.getCurYear());
+                ci.setOwnYear(year);
 
                 ci.setUrl(qiniuConfigTools.getQiniuConfig().getUrl() + key);
                 classImageDao.save(ci);

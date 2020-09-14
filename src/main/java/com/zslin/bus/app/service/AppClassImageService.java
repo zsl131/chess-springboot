@@ -9,10 +9,14 @@ import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.IClassCourseDao;
 import com.zslin.bus.yard.dao.IClassImageDao;
+import com.zslin.bus.yard.dao.ITeacherClassroomDao;
 import com.zslin.bus.yard.model.ClassImage;
+import com.zslin.bus.yard.tools.TeachPlanConfigTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AppClassImageService {
@@ -22,6 +26,12 @@ public class AppClassImageService {
 
     @Autowired
     private IClassCourseDao classCourseDao;
+
+    @Autowired
+    private TeachPlanConfigTools teachPlanConfigTools;
+
+    @Autowired
+    private ITeacherClassroomDao teacherClassroomDao;
 
     public JsonResult listByCourse(String params) {
         Integer page = 0;
@@ -39,5 +49,19 @@ public class AppClassImageService {
         Page<ClassImage> list = classImageDao.findAll(ssb.generate(), SimplePageBuilder.generate(page, SimpleSortBuilder.generateSort("id_d")));
 
         return JsonResult.success().set("imageList", list.getContent()).set("course", classCourseDao.findOne(courseId)).set("year", year);
+    }
+
+    public JsonResult listByCourseNew(String params) {
+        Integer teaId = JsonTools.getUserId(params);
+        Integer courseId = JsonTools.getIntegerParams(params, "courseId");
+        Integer roomId = JsonTools.getIntegerParams(params, "roomId");
+        String year = teachPlanConfigTools.getCurYear();
+        //Integer teaId, String year, Integer courseId, Integer roomId
+        List<ClassImage> imageList = classImageDao.findByTea(teaId, year, courseId, roomId);
+
+        return JsonResult.success().set("imageList", imageList)
+                .set("course", classCourseDao.findOne(courseId))
+                .set("classroom", teacherClassroomDao.findOne(roomId))
+                .set("year", year);
     }
 }

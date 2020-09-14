@@ -83,6 +83,8 @@ public class TeachPlanService {
         String teachStep = JsonTools.getJsonParam(params, "teachStep"); //授课过程
         String nextTeach = JsonTools.getJsonParam(params, "nextTeach"); //过渡下一课程
         String blockName = JsonTools.getJsonParam(params, "blockName"); //知识点名称
+        String text = JsonTools.getJsonParam(params, "text");
+        String delta = JsonTools.getJsonParam(params, "delta");
         if(plan==null) {
             plan = new TeachPlan();
             ClassCourse course = classCourseDao.findOne(courseId);
@@ -123,6 +125,8 @@ public class TeachPlanService {
         plan.setTeachStep(teachStep);
         plan.setNextTeach(nextTeach);
         plan.setBlockName(blockName);
+        plan.setTeachStepText(text);
+        plan.setTeachStepDelta(delta);
 
         plan.setUpdateDay(NormalTools.curDate());
         plan.setUpdateTime(NormalTools.curDatetime());

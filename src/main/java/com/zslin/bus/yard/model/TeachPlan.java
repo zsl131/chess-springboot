@@ -58,6 +58,14 @@ public class TeachPlan {
     @Lob
     private String teachStep;
 
+    @Column(name = "teach_step_text")
+    @Lob
+    private String teachStepText;
+
+    @Column(name = "teach_step_delta")
+    @Lob
+    private String teachStepDelta;
+
     /** 课程过渡，即接下来如何授课 */
     @Column(name = "next_teach")
     @Lob

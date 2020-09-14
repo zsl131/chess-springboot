@@ -21,6 +21,19 @@ public class QueryTools<T> {
         return new QueryTools();
     }
 
+    public Specification<T> buildSearch(List<QueryListConditionDto> conditionDtoList, String groupBy, SpecificationOperator... ops) {
+        SimpleSpecificationBuilder builder = new SimpleSpecificationBuilder();
+        builder.add(ops); //先添加
+        for(QueryListConditionDto dto : conditionDtoList) {
+            try {
+                builder.add(dto.getKey(), dto.getMatch(), dto.getValue());
+            } catch (Exception e) {
+            }
+        }
+        if(groupBy!=null && !"".equals(groupBy)) {builder.addGroupBy(groupBy);}
+        return builder.generate();
+    }
+
     public Specification<T> buildSearch(List<QueryListConditionDto> conditionDtoList, SpecificationOperator... ops) {
         SimpleSpecificationBuilder builder = new SimpleSpecificationBuilder();
         builder.add(ops); //先添加

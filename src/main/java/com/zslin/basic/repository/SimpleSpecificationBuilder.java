@@ -12,6 +12,8 @@ public class SimpleSpecificationBuilder<T> {
 
     private List<SpecificationOperator> opers;
 
+    private List<String> groupBys;
+
     public SimpleSpecificationBuilder(String key, String oper, Object value) {
         /*SpecificationOperator so = new SpecificationOperator(key, oper, value, "and");
         opers = new ArrayList<>();
@@ -59,6 +61,12 @@ public class SimpleSpecificationBuilder<T> {
         return this.add(key, oper, value, "and", null);
     }
 
+    public SimpleSpecificationBuilder addGroupBy(String groupBy) {
+        if(this.groupBys==null) {this.groupBys = new ArrayList<>();}
+        this.groupBys.add(groupBy);
+        return this;
+    }
+
     public SimpleSpecificationBuilder add(String key, String oper, Object value, String join, SpecificationOperator ...relations) {
         SpecificationOperator so = new SpecificationOperator(key, oper, value, join, relations);
         opers.add(so);
@@ -66,7 +74,7 @@ public class SimpleSpecificationBuilder<T> {
     }
 
     public Specification generate() {
-        Specification<T> specification = new SimpleSpecification<>(opers);
+        Specification<T> specification = new SimpleSpecification<>(opers, groupBys);
         return specification;
     }
 }

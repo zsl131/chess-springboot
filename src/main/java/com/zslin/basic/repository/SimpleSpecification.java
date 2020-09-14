@@ -33,8 +33,10 @@ public class SimpleSpecification<T> implements Specification<T> {
      * */
     private List<SpecificationOperator> opers;
 
-    public SimpleSpecification(List<SpecificationOperator> opers) {
-        this.opers = opers;
+    private List<String> groupBys;
+
+    public SimpleSpecification(List<SpecificationOperator> opers, List<String> groupBys) {
+        this.opers = opers; this.groupBys = groupBys;
     }
 
     @Override
@@ -65,6 +67,11 @@ public class SimpleSpecification<T> implements Specification<T> {
                 } else {
                     resultPre = criteriaBuilder.or(resultPre, pre);
                 }
+            }
+        }
+        if(this.groupBys!=null && this.groupBys.size()>0) {
+            for(String groupBy : this.groupBys) {
+                criteriaQuery.groupBy(root.get(groupBy));
             }
         }
         return resultPre;
