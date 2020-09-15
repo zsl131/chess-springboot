@@ -41,6 +41,18 @@ public class School {
     @Column(name = "system_id")
     private Integer systemId;
 
+    /** 是否在使用, 教案管理中只显示在使用的学校 */
+    @Column(name = "is_use")
+    private String isUse = "0";
+
+    public String getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(String isUse) {
+        this.isUse = isUse;
+    }
+
     public String getSystemName() {
         return systemName;
     }

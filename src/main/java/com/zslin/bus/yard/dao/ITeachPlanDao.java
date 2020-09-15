@@ -29,6 +29,9 @@ public interface ITeachPlanDao extends BaseRepository<TeachPlan, Integer>, JpaSp
     @Query("SELECT MAX(t.orderNo) FROM TeachPlan t WHERE t.teaId=?1 AND t.courseId=?2 AND t.planYear=?3")
     Integer queryMaxOrderNo(Integer teaId, Integer courseId, String year);
 
+    @Query("FROM TeachPlan t WHERE t.teaId=?1 AND t.planYear=?2 GROUP BY t.courseId")
+    List<TeachPlan> findByTea(Integer teaId, String year);
+
     /**
      * 获取教师对应课程的教案
      * @param teaId 教师ID

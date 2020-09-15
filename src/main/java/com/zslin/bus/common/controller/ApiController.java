@@ -81,7 +81,7 @@ public class ApiController {
         if(token == null || "".equals(token) || apiCode==null || "".equals(apiCode)) {
             return JsonResult.getInstance().fail("auth-token或api-code为空");
         }
-        System.out.println("ApiController--> apiCode:"+apiCode+", ignore:"+ignoreCheck(apiCode)+", userDto: "+userDto.toString());
+       // System.out.println("ApiController--> apiCode:"+apiCode+", ignore:"+ignoreCheck(apiCode)+", userDto: "+userDto.toString());
         //检测token是否有效
         if(!ignoreCheck(apiCode) && !appUserLoginTools.checkLogin(userDto.getPhone(), userDto.getToken())) {
             return JsonResult.getInstance().fail("用户登陆失效，请重新登陆").set("login", "timeout");

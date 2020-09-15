@@ -32,6 +32,9 @@ public class TeachPlanService {
     private TeachPlanConfigTools teachPlanConfigTools;
 
     @Autowired
+    private ISchoolDao schoolDao;
+
+    @Autowired
     private ITeacherDao teacherDao;
 
     @Autowired
@@ -219,5 +222,27 @@ public class TeachPlanService {
 
         List<TeachPlan> planList = teachPlanDao.findByTeacher(teaId, courseId, year, SimpleSortBuilder.generateSort("orderNo_a"));
         return JsonResult.success().set("planList", planList);
+    }
+
+    /** 后台管理获取教案信息 */
+    public JsonResult listPlan4Manger(String params) {
+        Integer schId = JsonTools.getIntegerParams(params, "schId");
+        Integer teaId = JsonTools.getIntegerParams(params, "teaId");
+        String type = JsonTools.getJsonParam(params, "type");
+        JsonResult result = JsonResult.getInstance();
+        if(type==null||"".equals(type) || "1".equals(type)) { //获取学校
+            type = "1";
+            List<School> schList = schoolDao.findByIsUse("1");
+            result.set("schoolList", schList);
+        } else if("2".equals(type)) {
+            List<Teacher> teaList = teacherDao.findBySchoolIdAndIsUse(schId, "1");
+            result.set("teacherList", teaList).set("school", schoolDao.findOne(schId));
+        } else if("3".equals(type)) {
+            String year = teachPlanConfigTools.getCurYear();
+            List<TeachPlan> planList = teachPlanDao.findByTea(teaId, year);
+            result.set("year", year).set("planList", planList).set("school", schoolDao.findOne(schId))
+            .set("teacher", teacherDao.findOne(teaId));
+        }
+        return result.set("type", type);
     }
 }

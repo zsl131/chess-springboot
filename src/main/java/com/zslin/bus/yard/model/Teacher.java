@@ -43,6 +43,18 @@ public class Teacher {
 
     private String password;
 
+    /** 是否在使用，教案管理中只显示在使用的教师 */
+    @Column(name = "is_use")
+    private String isUse = "0";
+
+    public String getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(String isUse) {
+        this.isUse = isUse;
+    }
+
     /** 是否是测试老师用户 */
     @Column(name = "is_test")
     private String isTest = "0";

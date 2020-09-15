@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by zsl on 2018/9/10.
  */
@@ -20,4 +22,12 @@ public interface ISchoolDao extends BaseRepository<School, Integer>, JpaSpecific
     /** 通过手机号码获取对应学校的体系ID */
     @Query("SELECT s.systemId FROM School s , Teacher t WHERE s.id=t.schoolId AND t.phone=?1")
     Integer findSystemId(String username);
+
+
+    @Query("UPDATE School s SET s.isUse=?1 WHERE s.id=?2")
+    @Modifying
+    @Transactional
+    void updateIsUse(String isUse, Integer id);
+
+    List<School> findByIsUse(String isUse);
 }

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by zsl on 2018/9/10.
  */
@@ -36,7 +38,14 @@ public interface ITeacherDao extends BaseRepository<Teacher, Integer>, JpaSpecif
     @Transactional
     void updateIsTest(String isTest, Integer id);
 
+    @Query("UPDATE Teacher t SET t.isUse=?1 WHERE t.id=?2")
+    @Modifying
+    @Transactional
+    void updateIsUse(String isUse, Integer id);
+
     /** 获取手机号码对应的教师是否是测试教师 */
     @Query("SELECT t.isTest FROM Teacher t WHERE t.phone=?1")
     String queryIsTest(String phone);
+
+    List<Teacher> findBySchoolIdAndIsUse(Integer schoolId, String isUse);
 }

@@ -23,7 +23,7 @@ public class AppUserLoginTools {
      * @return
      */
     public boolean checkLogin(String username, String token) {
-        System.out.println("---AppUserLoginTools---username: "+username+", token: "+token);
+        //System.out.println("---AppUserLoginTools---username: "+username+", token: "+token);
         if(token==null) {return false;}
         if(token.equalsIgnoreCase("noLogin")) {return true;}
         String oldToken = (String) cacheTools.getKey(username);

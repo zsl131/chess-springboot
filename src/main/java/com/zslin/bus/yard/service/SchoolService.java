@@ -113,4 +113,20 @@ public class SchoolService {
             return JsonResult.error(e.getMessage());
         }
     }
+
+    /**
+     * 设置是否是测试用户
+     * @param params 必须包含 isTest  id
+     * @return
+     */
+    public JsonResult setIsUse(String params) {
+        try {
+            Integer id = JsonTools.getId(params);
+            String isUse = JsonTools.getJsonParam(params, "isUse");
+            schoolDao.updateIsUse(isUse, id);
+            return JsonResult.success("设置成功");
+        } catch (Exception e) {
+            return JsonResult.error(e.getMessage());
+        }
+    }
 }
