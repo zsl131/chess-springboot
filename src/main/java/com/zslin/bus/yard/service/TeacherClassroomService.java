@@ -77,8 +77,10 @@ public class TeacherClassroomService {
                 classroom.setTerm(config.getTerm());
             }
             classroom.setTeaId(teaId);
-            classroom.setTeaName(tea.getName());
-            classroom.setTeaPhone(tea.getPhone());
+            if(tea!=null) {
+                classroom.setTeaName(tea.getName());
+                classroom.setTeaPhone(tea.getPhone());
+            }
             teacherClassroomDao.save(classroom);
         } else {
             TeacherClassroom classroom = teacherClassroomDao.findOne(id);
