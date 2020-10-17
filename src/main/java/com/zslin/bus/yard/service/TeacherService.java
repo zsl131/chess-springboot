@@ -217,7 +217,7 @@ public class TeacherService {
             String phone = JsonTools.getJsonParam(params, "phone");
             String pwd = SecurityUtil.md5(phone, phone.substring(phone.length()-6));
             teacherDao.updatePwd(pwd, id);
-            userDao.updatePhone(pwd, phone);
+            userDao.updatePwd(pwd, phone);
             return JsonResult.success("初始化密码成功");
         } catch (Exception e) {
             return JsonResult.error("初始失败："+e.getMessage());
