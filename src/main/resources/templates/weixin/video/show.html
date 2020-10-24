@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${videoContent.title}">昭通市青少年科普教育协会-通知公告</title>
+    <meta name="description" id="description" th:content="${videoContent.title}"/>
+    <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js" language="JavaScript"></script>    <!-- 微信js -->
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-show.css"/>
+    <link type="text/css" rel="stylesheet" href="/weixin/weixin-video.css"/>
+    <link href="https://vjs.zencdn.net/7.5.5/video-js.css" rel="stylesheet"/>
+
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+    <script type="text/javascript" src="/weixin/weixin-share.js"></script>
+
+    <script type="text/javascript" src="/weixin/check-images.js"></script>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <div class="header">
+                <h3 class="title" th:text="${videoContent.title}"></h3>
+                <p class="icon">
+                    <span th:text="${videoContent.showDate}"></span>
+                </p>
+            </div>
+            <div class="check-images content" th:utext="${videoContent.content}"></div>
+        </div>
+    </div>
+</body>
+</html>

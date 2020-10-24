@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,8 +30,15 @@ public class UploadController {
     private static final String PATH_PRE = "/wangeditor/images";
     private static final String UPLOAD_PATH_PRE = "/publicFile/upload";
 
+    @RequestMapping(value = "normal")
+    public UploadResult normalUpload(@RequestParam("files") MultipartFile[] files, String extra) {
+        //log.info(extra);
+        UploadResult result = add(files);
+        return result;
+    }
+
     @RequestMapping(value="image")
-    public UploadResult add(HttpServletRequest request, @RequestParam("files") MultipartFile[] files) {
+    public UploadResult add(@RequestParam("files") MultipartFile[] files) {
 //        String authToken = request.getHeader("auth-token");
 //        System.out.println("=========="+files.length);
 //        System.out.println(authToken);

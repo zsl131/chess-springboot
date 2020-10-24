@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="fragments/weixinModel">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>昭通市青少年科普教育协会-视频资源</title>
+    <link type="text/css" rel="stylesheet" href="/weixin/activity-index.css"/>
+    <link type="text/css" rel="stylesheet" href="/weixin/weixin-video.css"/>
+</head>
+
+<body>
+    <div th:fragment="content" th:remove="tag">
+        <div>
+            <h2 class="activity-header"><span>视频资源</span>&nbsp;(<span th:text="${#lists.size(categoryList)}"></span>)</h2>
+            <hr/>
+            <div th:each="obj : ${categoryList}" th:remove="tag">
+                <div class="single-category-div">
+                    <a th:href="|/weixin/video/list?cateId=${obj.id}|">
+                        <p class="img-p"><img th:src="${obj.picPath}"/></p>
+                        <p class="name-p"><span th:text="${obj.name}"></span></p>
+                    </a>
+                </div>
+            </div>
+            <!--<div th:include="fragments/page-wx :: pager" style="margin:10px 10px 10px 0px;float:right;"></div>-->
+        </div>
+    </div>
+</body>
+</html>
