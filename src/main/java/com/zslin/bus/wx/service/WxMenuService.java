@@ -114,10 +114,10 @@ public class WxMenuService {
     public JsonResult synchMenu(String params) {
         try {
             String json = createMenuJson();
-//            System.out.println("---wxMenu::"+json);
+            System.out.println("---wxMenu::"+json);
             String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+ accessTokenTools.getAccessToken();
             org.json.JSONObject jsonObj = WeixinUtil.httpRequest(url, "POST", json);
-//            System.out.println("====createMenu result::"+jsonObj.toString());
+            System.out.println("====createMenu result::"+jsonObj.toString());
             String code = JsonTools.getJsonParam(jsonObj.toString(), "errcode");
 //            System.out.println("=====WxMenuService.synchMenu:::"+code);
             if("0".equals(code)) {
