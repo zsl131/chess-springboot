@@ -87,6 +87,18 @@ public class ActivityStudent {
     @Column(name = "from_flag")
     private String fromFlag = "0";
 
+    /** 是否缴费 */
+    @Column(name = "pay_flag")
+    private String payFlag = "0";
+
+    public String getPayFlag() {
+        return payFlag;
+    }
+
+    public void setPayFlag(String payFlag) {
+        this.payFlag = payFlag;
+    }
+
     public String getFromFlag() {
         return fromFlag;
     }

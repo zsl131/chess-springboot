@@ -41,6 +41,11 @@ public interface IActivityStudentDao extends BaseRepository<ActivityStudent, Int
     @Transactional
     void updateStatus(Integer id, String status, String reason);
 
+    @Query("UPDATE ActivityStudent a SET a.payFlag=?2 WHERE a.id=?1")
+    @Modifying
+    @Transactional
+    void updatePayFlag(Integer id, String payFlag);
+
     @Query("UPDATE ActivityStudent a SET a.hasCheck=?2 WHERE a.id=?1")
     @Modifying
     @Transactional

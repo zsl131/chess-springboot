@@ -112,6 +112,19 @@ public class ActivityStudentService {
         }
     }
 
+    /** 修改支付标记 */
+    public JsonResult updatePayFlag(String params) {
+        try {
+            Integer id = JsonTools.getId(params);
+            String flag = JsonTools.getJsonParam(params, "flag");
+            activityStudentDao.updatePayFlag(id, flag);
+            return JsonResult.success("操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonResult.error(e.getMessage());
+        }
+    }
+
     /**
      * 用于签到
      * @param params {openid: 'abc123', recordId: 1}
