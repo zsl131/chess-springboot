@@ -91,6 +91,29 @@ public class ActivityStudent {
     @Column(name = "pay_flag")
     private String payFlag = "0";
 
+    /** 需要支付的金额 */
+    private Float money;
+
+    /** 所以订单对应编号 */
+    @Column(name = "orders_no")
+    private String ordersNo;
+
+    public String getOrdersNo() {
+        return ordersNo;
+    }
+
+    public void setOrdersNo(String ordersNo) {
+        this.ordersNo = ordersNo;
+    }
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
     public String getPayFlag() {
         return payFlag;
     }

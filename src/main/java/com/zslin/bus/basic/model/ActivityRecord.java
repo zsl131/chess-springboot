@@ -73,7 +73,30 @@ public class ActivityRecord {
     private Integer imgCount = 0;
 
     @Column(name = "publish_date")
-    public String publishDate;
+    private String publishDate;
+
+    /** 支付金额 */
+    private Float money;
+
+    /** 参与类型；0-免费；1-付费 */
+    @Column(name = "join_type")
+    private String joinType = "0";
+
+    public Float getMoney() {
+        return money;
+    }
+
+    public void setMoney(Float money) {
+        this.money = money;
+    }
+
+    public String getJoinType() {
+        return joinType;
+    }
+
+    public void setJoinType(String joinType) {
+        this.joinType = joinType;
+    }
 
     public String getPublishDate() {
         return publishDate;

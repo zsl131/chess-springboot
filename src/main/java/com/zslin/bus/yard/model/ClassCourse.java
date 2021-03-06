@@ -47,6 +47,10 @@ public class ClassCourse {
     @Column(name = "video_id")
     private Integer videoId;
 
+    /** 多视频的ID */
+    @Column(name = "video_ids")
+    private String videoIds;
+
     @Column(name = "learn_id")
     private Integer learnId;
 
@@ -91,6 +95,14 @@ public class ClassCourse {
     @Column(name = "key_point")
     @Lob
     private String keyPoint;
+
+    public String getVideoIds() {
+        return videoIds;
+    }
+
+    public void setVideoIds(String videoIds) {
+        this.videoIds = videoIds;
+    }
 
     public String getTeachTarget() {
         return teachTarget;

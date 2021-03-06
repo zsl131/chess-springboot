@@ -26,7 +26,20 @@ public class WxConfig {
 
     private String token;
 
+    /**
+     * 商户号id
+     * @remark 微信支付
+     */
+    private String mchid;
 
+    /**
+     * Api密钥
+     * @remark 微信支付
+     */
+    private String apiKey;
+
+    @Column(name = "pay_notify_url")
+    private String payNotifyUrl;
 
     @Column(name = "event_temp")
     private String eventTemp;
@@ -42,6 +55,30 @@ public class WxConfig {
                 ", token='" + token + '\'' +
                 ", eventTemp='" + eventTemp + '\'' +
                 '}';
+    }
+
+    public String getPayNotifyUrl() {
+        return payNotifyUrl;
+    }
+
+    public void setPayNotifyUrl(String payNotifyUrl) {
+        this.payNotifyUrl = payNotifyUrl;
+    }
+
+    public String getMchid() {
+        return mchid;
+    }
+
+    public void setMchid(String mchid) {
+        this.mchid = mchid;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public Integer getId() {

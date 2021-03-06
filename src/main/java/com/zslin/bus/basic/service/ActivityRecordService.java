@@ -86,6 +86,7 @@ public class ActivityRecordService {
             ar.setCreateTime(NormalTools.curDatetime());
             ar.setCreateLong(System.currentTimeMillis());
             ar.setStatus("0");
+            ar.setJoinType((ar.getMoney()!=null&&ar.getMoney()>0)?"1":"0");
             activityRecordDao.save(ar);
             activityDao.updateRecordCount(ar.getActId(), 1); //添加一次活动开展次数
 //            return new JsonResult(new JsonObj(1, ar));
@@ -99,6 +100,8 @@ public class ActivityRecordService {
             a.setStatus(ar.getStatus());
             a.setStartTime(ar.getStartTime());
             a.setHoldTime(ar.getHoldTime());
+            a.setMoney(ar.getMoney());
+            a.setJoinType((ar.getMoney()!=null&&ar.getMoney()>0)?"1":"0");
             if(ar.getPublishDate()!=null && !"".equals(ar.getPublishDate())) {
                 a.setPublishDate(ar.getPublishDate());
             } else {

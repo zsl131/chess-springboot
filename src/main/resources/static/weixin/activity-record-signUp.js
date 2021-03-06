@@ -93,6 +93,15 @@ $(function() {
     });
 });
 
+function choiceStudent(obj) {
+    //console.log("----------->")
+    var price = parseFloat($("input[name='price']").val());
+    var len = $("input[name='student']:checked").length;
+    console.log(len, price);
+
+    $(".studentCount").html(len); $(".totalMoney").html(len*price);
+}
+
 function optStu(flag) {
     var stuList = $(".student-list").find("input[type='checkbox']:checked");
     if(stuList.length<=0) {

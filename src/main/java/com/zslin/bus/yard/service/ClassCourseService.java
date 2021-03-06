@@ -11,6 +11,7 @@ import com.zslin.bus.common.tools.JsonTools;
 import com.zslin.bus.common.tools.QueryTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.yard.dao.*;
+import com.zslin.bus.yard.model.Attachment;
 import com.zslin.bus.yard.model.ClassCategory;
 import com.zslin.bus.yard.model.ClassCourse;
 import com.zslin.bus.yard.model.ClassCourseAtta;
@@ -44,6 +45,47 @@ public class ClassCourseService {
 
     @Autowired
     private IClassCourseAttaDao classCourseAttaDao;
+
+    /** 重新构建视频ID */
+    public JsonResult rebuildVideoIds(String params) {
+        Integer id = JsonTools.getId(params); //ClassCourse的ID
+        Integer attaId = JsonTools.getIntegerParams(params, "attaId"); //Attachment的ID
+        String flag = JsonTools.getJsonParam(params, "flag"); //如果为空或1，则添加；其他则为删除
+        ClassCourse cc = classCourseDao.findOne(id);
+        cc.setVideoIds(handle(cc.getVideoIds(), attaId, flag));
+        classCourseDao.save(cc);
+        return JsonResult.success("操作成功");
+    }
+
+    /** 处理IDs */
+    private String handle(String ids, Integer attaId, String flag) {
+//        String ids = cc.getVideoIds();
+        if(ids==null) {ids = ",";} //先初始化
+        if(flag == null || "1".equals(flag)) { //如果为空或为1，都是添加
+            ids += attaId+",";
+        } else {
+            ids = ids.replace(","+attaId+",", ",");
+        }
+        //cc.setVideoIds(ids);
+        return ids;
+    }
+
+    /** 获取课程对应的附件信息 */
+    public JsonResult handleAtta(String params) {
+        Integer id = JsonTools.getId(params);
+        ClassCourse s = classCourseDao.findOne(id);
+        JsonResult result = JsonResult.succ(s);
+        if(s.getLearnId()!=null && s.getLearnId()>0) {result.set("learn", attachmentDao.findOne(s.getLearnId()));}
+        if(s.getPptId()!=null && s.getPptId()>0) {result.set("ppt", attachmentDao.findOne(s.getPptId()));}
+        if(s.getVideoId()!=null && s.getVideoId()>0) {result.set("video", attachmentDao.findOne(s.getVideoId()));}
+        String videoIds = s.getVideoIds();
+        videoIds = videoIds==null?"0":"0"+videoIds+"0";
+//        System.out.println("-----------ClassCourseService.handleAtta---------"+videoIds);
+        List<Attachment> attaList = attachmentDao.listByHql("FROM Attachment a WHERE a.id IN ("+videoIds+")");
+
+        result.set("attachmentList", attaList);
+        return result;
+    }
 
     public JsonResult list(String params) {
         QueryListDto qld = QueryTools.buildQueryListDto(params);

@@ -149,10 +149,19 @@ public class AppCourseNewService {
         Attachment learn = (course.getLearnId()==null||course.getLearnId()<=0)?null:attachmentDao.findOne(course.getLearnId());
         List<ClassCourseAtta> attaList = classCourseAttaDao.findByCourseId(cid);
 
+        /** 获取多视频 */
+        String videoIds = course.getVideoIds();
+        videoIds = videoIds==null?"0":"0"+videoIds+"0";
+        if(course.getVideoId()!=null&&course.getVideoId()>0) {
+            videoIds += ","+course.getVideoId(); //把之前的获取出来
+        }
+        //System.out.println("-----------ClassCourseService.handleAtta---------"+videoIds);
+        List<Attachment> attachmentList = attachmentDao.listByHql("FROM Attachment a WHERE a.id IN ("+videoIds+")");
+
         TeacherClassroom room = teacherClassroomDao.findOne(roomId);
 
         return JsonResult.success().set("course", course).set("video", video).set("ppt", ppt).set("learn", learn)
                 .set("commentList", commentList.getContent()).set("commentCount", commentList.getTotalElements())
-                .set("attaList", attaList).set("room", room);
+                .set("attaList", attaList).set("room", room).set("attachmentList", attachmentList);
     }
 }

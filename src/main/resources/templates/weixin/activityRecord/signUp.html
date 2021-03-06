@@ -50,6 +50,11 @@
                     <span class="weui-form-preview__value" th:text="|${record.maxCount} 个家庭|">名字</span>
                 </div>
                 <div class="weui-form-preview__item">
+                    <label class="weui-form-preview__label">费用</label>
+                    <span class="weui-form-preview__value status-1" th:if="${record.money ne null and record.money gt 0}" th:text="|${record.money} 元/位|" >费用</span>
+                    <span class="weui-form-preview__value" th:if="${record.money eq null or record.money le 0}">免费</span>
+                </div>
+                <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">状态</label>
                     <span class="weui-form-preview__value">
                         <span th:if="${record.status eq '0'}" class="status-0">未开始</span>
@@ -60,11 +65,14 @@
             </div>
         </div>
 
+        <!-- 单价 -->
+        <input name="price" type="hidden" th:value="${(record.money ne null and record.money gt 0)?record.money:0}"/>
+
         <div class="weui-cells__title">学生列表</div>
         <div class="weui-cells weui-cells_checkbox student-list">
             <label class="weui-cell weui-check__label" th:each="stu : ${studentList}" th:for="|stu_${stu.id}|">
                 <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" name="student" th:attr="stuName=${stu.name}, stuId=${stu.id}" th:id="|stu_${stu.id}|"/>
+                    <input type="checkbox" class="weui-check" onchange="choiceStudent(this)" name="student" th:attr="stuName=${stu.name}, stuId=${stu.id}" th:id="|stu_${stu.id}|"/>
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -72,10 +80,14 @@
                     <p class="stu_detail" th:text="|${stu.ageName}｜${stu.schoolName}｜${stu.sex eq '1'?'男':'女'}｜${stu.phone}|">详情</p>
                 </div>
             </label>
+            <div class="weui-cell__bd" style="text-align:center;width:100%;line-height:60px; border-top:1px #f0f0f0 solid;">
+                已选择<b class="studentCount" style="color:#F00">0</b>人 ，需支付<b class="totalMoney" style="color:#F00">0</b>元。
+            </div>
             <div class="weui-form-preview__ft">
                 <button type="button" class="weui-form-preview__btn weui-form-preview__btn_default" onclick="optStu('0')">删除所选学生</button>
                 <button type="button" class="weui-form-preview__btn weui-form-preview__btn_primary" onclick="optStu('1')">确定报名</button>
             </div>
+
             <a href="javascript:void(0);" class="weui-cell weui-cell_link">
                 <div class="weui-cell__bd add-student weui-btn weui-btn_mini weui-btn_primary">添加学生</div>
             </a>

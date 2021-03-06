@@ -6,6 +6,8 @@ import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.basic.model.ActivityStudent;
 import com.zslin.bus.basic.model.Student;
 import com.zslin.bus.common.rabbit.RabbitMQConfig;
+import com.zslin.bus.common.rabbit.RabbitNormalTools;
+import com.zslin.bus.pay.dto.SubmitOrdersDto;
 import com.zslin.bus.wx.dao.IWxAccountDao;
 import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.model.WxAccount;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by zsl on 2019/6/23.
@@ -60,6 +63,9 @@ public class WxActivityRecordController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private RabbitNormalTools rabbitNormalTools;
 
     /** 签到 */
     @GetMapping(value = "signIn")
@@ -154,8 +160,14 @@ public class WxActivityRecordController {
     @PostMapping(value = "addStudentActivity")
     public @ResponseBody String addStudentActivity(String ids, String from, Integer recordId, HttpServletRequest request) {
         String openid = SessionTools.getOpenid(request);
+        WxAccount account = wxAccountDao.findByOpenid(openid);
+        if(account==null) { System.out.println("WxActivityRecordController===No Account ===>Openid:::"+openid); return "-1";} //没有找到对应的微信用户信息，需要提示重新关注公众号
+        String ip = request.getRemoteAddr();
         String [] array = ids.replaceAll(" ", "").split(",");
         ActivityRecord ar = activityRecordDao.findOne(recordId);
+        String ordersNo = buildOrdersNo(account.getId()); //生成唯一订单编号
+        Float price = (ar.getMoney()==null||ar.getMoney()<0)?0f:ar.getMoney();
+        Integer stuCount = 0; String stuNames = ""; String actStuIds = "";
         for(String idStr : array) {
             if(idStr!=null) {
                 try {
@@ -164,7 +176,7 @@ public class WxActivityRecordController {
                     if(as==null) { //如果没有添加的才可以添加
                         as = new ActivityStudent();
                         Student stu = studentDao.findOne(id);
-                        WxAccount account = wxAccountDao.findByOpenid(openid);
+
                         as.setAgeId(stu.getAgeId());
                         as.setFromFlag(from);
                         as.setSchoolId(stu.getSchoolId());
@@ -174,9 +186,7 @@ public class WxActivityRecordController {
                         as.setActTitle(ar.getActTitle());
                         as.setAddress(ar.getAddress());
                         as.setAgeName(stu.getAgeName());
-                        if(account!=null) {
-                            as.setAvatarUrl(account.getAvatarUrl());
-                        }
+                        as.setAvatarUrl(account.getAvatarUrl());
                         as.setDepId(ar.getDepId());
                         as.setHoldTime(ar.getHoldTime());
                         as.setOpenid(openid);
@@ -187,17 +197,57 @@ public class WxActivityRecordController {
                         as.setPhone(stu.getPhone());
                         as.setStuId(id);
                         as.setStuName(stu.getName());
+                        as.setMoney(ar.getMoney());
+                        as.setPayFlag("0");
+                        as.setOrdersNo(ordersNo);
                         activityStudentDao.save(as);
                         activityRecordDao.updateApplyCount(recordId, 1); //报名人数加1
+
+                        stuCount ++;
+                        stuNames += (stu.getName()+",");
+                        actStuIds += (as.getId()+",");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("WxActivityRecordController===>Openid:::"+openid);
-                    return "出错："+e.getMessage();
+                    //return "出错："+e.getMessage();
                 }
             }
         }
+        if(stuCount>0) { //有报名信息
+            SubmitOrdersDto objDto = new SubmitOrdersDto();
+            objDto.setActStuIds(actStuIds);
+            objDto.setBodyTitle(ar.getActTitle()+"-"+stuNames);
+            objDto.setOrdersNo(ordersNo);
+            objDto.setPrice(price);
+            objDto.setStuCount(stuCount);
+            objDto.setStuNames(stuNames);
+            objDto.setIp(ip);
+            rabbitNormalTools.updateData("ordersTools", "addNewOrders", account, objDto);
+           // addOrders(account, ordersNo, price, stuCount, stuNames, actStuIds, ar.getActTitle());
+        }
         return "1";
+    }
+
+    /**
+     * 订单编号规则
+     * 前14位是时间，后3位是随机数，中间数字为用户ID
+     * @param accountId 用户ID
+     * @return
+     */
+    public String buildOrdersNo(Integer accountId) {
+        String curDate = NormalTools.getNow("yyyyMMddHHmmss")+accountId;
+        int random = genRandomInt();
+        return  curDate+random;
+    }
+
+    private Integer genRandomInt() {
+        int res = 0;
+        Random ran = new Random();
+        while(res<100) {
+            res = ran.nextInt(999);
+        }
+        return res;
     }
 
     /** 删除学生，只能删除自己添加的学生 */

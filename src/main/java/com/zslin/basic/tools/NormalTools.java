@@ -1,6 +1,8 @@
 package com.zslin.basic.tools;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -60,6 +62,12 @@ public class NormalTools {
         f1 = Math.rint(f1);
         return f1;*/
         return Math.ceil(d);
+    }
+
+    public static String getNow(String pattern) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern(pattern);
+        String res = df.format(LocalDateTime.now());
+        return res;
     }
 
     public static String curDate() {
