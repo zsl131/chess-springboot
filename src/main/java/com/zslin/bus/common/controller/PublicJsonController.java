@@ -2,7 +2,6 @@ package com.zslin.bus.common.controller;
 
 import com.zslin.bus.basic.dao.IAgeDicDao;
 import com.zslin.bus.basic.dao.ISchoolDicDao;
-import com.zslin.bus.basic.model.AgeDic;
 import com.zslin.bus.basic.model.SchoolDic;
 import com.zslin.bus.tools.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,10 @@ public class PublicJsonController {
     @GetMapping(value = "onAddStudent")
     public JsonResult onAddStudent() {
         JsonResult result = JsonResult.getInstance();
-        List<AgeDic> ageList = ageDicDao.findAll();
+        //List<AgeDic> ageList = ageDicDao.findAll();
         List<SchoolDic> schoolList = schoolDicDao.findAll();
-        result.set("ageList", ageList).set("schoolList", schoolList);
+//        result.set("ageList", ageList).set("schoolList", schoolList);
+        result.set("schoolList", schoolList);
         return result;
     }
 }

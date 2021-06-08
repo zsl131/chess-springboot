@@ -77,7 +77,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <p><span th:text="${stu.name}" th:remove="tag"></span><span class="already_stu" th:id="|act_id_${stu.id}|"></span></p>
-                    <p class="stu_detail" th:text="|${stu.ageName}｜${stu.schoolName}｜${stu.sex eq '1'?'男':'女'}｜${stu.phone}|">详情</p>
+                    <p class="stu_detail" th:text="|${stu.schoolName}｜${stu.sex eq '1'?'男':'女'}｜${stu.phone}|">详情</p>
                 </div>
             </label>
             <div class="weui-cell__bd" style="text-align:center;width:100%;line-height:60px; border-top:1px #f0f0f0 solid;">
