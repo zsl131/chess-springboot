@@ -86,7 +86,7 @@ function choiceStudent(obj) {
     //console.log("----------->")
     var price = parseFloat($("input[name='price']").val());
     var len = $("input[name='student']:checked").length;
-    console.log(len, price);
+    //console.log(len, price);
 
     $(".studentCount").html(len); $(".totalMoney").html(len*price);
 }
@@ -103,6 +103,7 @@ function optStu(flag) {
             ids += $(target).attr("stuId")+",";
         }
         //console.log(names+"---"+ids);
+
         names = names.indexOf("，")>0?names.substring(0, names.length-1):names;
         $.confirm("您确定"+(flag=='0'?"删除":"报名")+"["+names+"]吗?", "确认"+(flag=='0'?"删除":"报名")+"?", function() {
           if(flag=='0') {
@@ -122,6 +123,10 @@ function optStu(flag) {
                     $.toast("报名成功", function() {
                         window.location.reload();
                     });
+                } else if(res=='-1') {
+                    var noticeHtml = "<img src='http://qiniu.qswkx.com/qswxk-gzh.jpg' style='width:100%'/>";
+                    noticeHtml += '<p>请先关注<b>“奇思玩科学”</b>公众号</p>';
+                    showDialog(noticeHtml, "提示");
                 } else {
                     alert(res);
                 }

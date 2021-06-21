@@ -161,7 +161,7 @@ public class WxActivityRecordController {
     public @ResponseBody String addStudentActivity(String ids, String from, Integer recordId, HttpServletRequest request) {
         String openid = SessionTools.getOpenid(request);
         WxAccount account = wxAccountDao.findByOpenid(openid);
-        if(account==null) { System.out.println("WxActivityRecordController===No Account ===>Openid:::"+openid); return "请先关注“奇思玩科学”公众号";} //没有找到对应的微信用户信息，需要提示重新关注公众号
+        if(account==null) { System.out.println("WxActivityRecordController===No Account ===>Openid:::"+openid); return "-1";} //没有找到对应的微信用户信息，需要提示重新关注公众号
         String ip = request.getRemoteAddr();
         String [] array = ids.replaceAll(" ", "").split(",");
         ActivityRecord ar = activityRecordDao.findOne(recordId);
