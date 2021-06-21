@@ -3,6 +3,7 @@ package com.zslin.bus.wx.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by zsl on 2018/7/3.
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "wx_account")
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
-public class WxAccount {
+public class WxAccount implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
