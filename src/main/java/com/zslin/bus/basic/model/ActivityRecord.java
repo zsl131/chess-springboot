@@ -72,6 +72,9 @@ public class ActivityRecord {
     @Column(name = "img_count")
     private Integer imgCount = 0;
 
+    /** 生成的推广二维码数量 */
+    private Integer qrCount = 0;
+
     @Column(name = "publish_date")
     private String publishDate;
 
@@ -81,6 +84,14 @@ public class ActivityRecord {
     /** 参与类型；0-免费；1-付费 */
     @Column(name = "join_type")
     private String joinType = "0";
+
+    public Integer getQrCount() {
+        return qrCount;
+    }
+
+    public void setQrCount(Integer qrCount) {
+        this.qrCount = qrCount;
+    }
 
     public Float getMoney() {
         return money;

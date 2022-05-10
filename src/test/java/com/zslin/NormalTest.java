@@ -21,6 +21,7 @@ import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.tools.*;
 import com.zslin.bus.qiniu.dto.MyPutRet;
 import com.zslin.bus.qiniu.tools.QiniuUploadTools;
+import com.zslin.bus.share.tools.BuildShareQrTools;
 import com.zslin.bus.tools.ExportStudentTools;
 import com.zslin.bus.tools.JsonResult;
 import com.zslin.bus.wx.dto.SendMessageDto;
@@ -129,6 +130,15 @@ public class NormalTest {
 
     @Autowired
     private TeachPlanTools teachPlanTools;
+
+    @Autowired
+    private BuildShareQrTools buildShareQrTools;
+
+    @Test
+    public void test41() {
+        String path = buildShareQrTools.buildQrPath(73, 1);
+        System.out.println(path);
+    }
 
     @Test
     public void test40() {

@@ -1,5 +1,6 @@
 package com.zslin.bus.common.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zslin.basic.tools.ConfigTools;
 import com.zslin.basic.tools.NormalTools;
 import com.zslin.bus.common.controller.dto.UploadResult;
@@ -79,8 +80,14 @@ public class UploadController {
      * @throws IOException
      */
     @RequestMapping(value = "uploadFile")
-    public String uploadFile(@RequestParam("file")MultipartFile[] multipartFile,String path) throws IOException {
+    public String uploadFile(@RequestParam("file")MultipartFile[] multipartFile,String path, String extra) throws IOException {
 //        System.out.println("======="+path+"=====length:"+multipartFile.length);
+        boolean needScale = true;
+        try {
+            JSONObject jsonObj = JSONObject.parseObject(extra);
+            needScale = jsonObj.getBoolean("scale");
+        } catch (Exception e) {
+        }
         String result = "error";
         if(multipartFile!=null && multipartFile.length>=1) {
             MultipartFile mf = multipartFile[0];
@@ -95,7 +102,9 @@ public class UploadController {
                 result = outFile.getAbsolutePath().replace(configTools.getUploadPath(), File.separator).replaceAll("\\\\", "/");
                 FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
                 try {
-                    Thumbnails.of(outFile).size(1000, 1000).toFile(outFile);
+                    if(needScale) {
+                        Thumbnails.of(outFile).size(1000, 1000).toFile(outFile);
+                    }
                 } catch (Exception e) {
                 }
 //                result.add(uploadPath);

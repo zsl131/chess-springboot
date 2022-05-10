@@ -13,6 +13,7 @@
 
 <body>
     <div th:fragment="content" th:remove="tag">
+        <input th:if="user ne null" name="userId" th:value="${user.id}" type="hidden"/>
         <input th:value="${from}" name="from" type="hidden"/>
         <input th:value="${record.id}" name="recordId" type="hidden"/>
         <span th:each="act: ${actList}">
@@ -22,6 +23,7 @@
             <h1 class="demos-title">活动报名
                 <span th:if="${from eq '1'}" class="from from-1">(受邀请报名)</span>
                 <span th:unless="${from eq '1'}" class="from from-0">(社会报名)</span>
+                <span th:if="${user ne null}">(<b th:text="${user.name}"></b>推荐)</span>
             </h1>
         </header>
 

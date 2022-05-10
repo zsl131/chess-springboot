@@ -8,6 +8,8 @@ import com.zslin.bus.basic.model.Student;
 import com.zslin.bus.common.rabbit.RabbitMQConfig;
 import com.zslin.bus.common.rabbit.RabbitNormalTools;
 import com.zslin.bus.pay.dto.SubmitOrdersDto;
+import com.zslin.bus.share.dao.IShareUserDao;
+import com.zslin.bus.share.model.ShareUser;
 import com.zslin.bus.wx.dao.IWxAccountDao;
 import com.zslin.bus.wx.dto.SendMessageDto;
 import com.zslin.bus.wx.model.WxAccount;
@@ -60,6 +62,9 @@ public class WxActivityRecordController {
 
     @Autowired
     private TemplateMessageTools templateMessageTools;
+
+    @Autowired
+    private IShareUserDao shareUserDao;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -115,7 +120,7 @@ public class WxActivityRecordController {
 
     /** 报名, from: 1-学校；0-社会 */
     @GetMapping(value = "signUp")
-    public String signUp(Model model, Integer recordId, String from, HttpServletRequest request) {
+    public String signUp(Model model, Integer recordId, Integer userId, String from, HttpServletRequest request) {
         ActivityRecord record = activityRecordDao.findOne(recordId);
         model.addAttribute("record", record);
         model.addAttribute("from", (from!=null && "1".equals(from))?"1":"0");
@@ -123,6 +128,9 @@ public class WxActivityRecordController {
 //System.out.println("-------------OPENID: "+openid);
         List<ActivityStudent> actList = activityStudentDao.findByRecordIdAndOpenid(recordId, openid);
         List<Student> studentList = studentDao.findByOpenid(openid);
+        if(userId!=null && userId>0) { //如果有用户ID，则有用户
+            model.addAttribute("user", shareUserDao.findOne(userId));
+        }
         model.addAttribute("studentList", studentList);
         model.addAttribute("actList", actList);
         return "weixin/activityRecord/signUp";
@@ -158,7 +166,7 @@ public class WxActivityRecordController {
 
     /** 报名 */
     @PostMapping(value = "addStudentActivity")
-    public @ResponseBody String addStudentActivity(String ids, String from, Integer recordId, HttpServletRequest request) {
+    public @ResponseBody String addStudentActivity(String ids, String from, Integer recordId, Integer userId, HttpServletRequest request) {
         String openid = SessionTools.getOpenid(request);
         WxAccount account = wxAccountDao.findByOpenid(openid);
         if(account==null) { System.out.println("WxActivityRecordController===No Account ===>Openid:::"+openid); return "-1";} //没有找到对应的微信用户信息，需要提示重新关注公众号
@@ -176,6 +184,16 @@ public class WxActivityRecordController {
                     if(as==null) { //如果没有添加的才可以添加
                         as = new ActivityStudent();
                         Student stu = studentDao.findOne(id);
+
+                        if(userId!=null && userId>0) { //设置推荐信息
+                            ShareUser shareUser = shareUserDao.findOne(userId);
+                            if(shareUser!=null) {
+                                as.setUserId(userId);
+                                as.setHasShare("1");
+                                as.setShareName(shareUser.getName());
+                                as.setSharePhone(shareUser.getPhone());
+                            }
+                        }
 
                         as.setAgeId(stu.getAgeId());
                         as.setFromFlag(from);

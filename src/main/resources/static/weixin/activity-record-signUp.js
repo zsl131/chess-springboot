@@ -117,8 +117,9 @@ function optStu(flag) {
           } else {
             var from = $("input[name='from']").val();
             var recordId = $("input[name='recordId']").val();
+            var userId = $("input[name='userId']").val();
             //alert(from+"---"+recordId);
-            $.post("/wx/activityRecord/addStudentActivity", {ids: ids, from: from, recordId: recordId}, function(res) {
+            $.post("/wx/activityRecord/addStudentActivity", {ids: ids, from: from, recordId: recordId, userId: userId}, function(res) {
                 if(res=='1') {
                     $.toast("报名成功", function() {
                         window.location.reload();

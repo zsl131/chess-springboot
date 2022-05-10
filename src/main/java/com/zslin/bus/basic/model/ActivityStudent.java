@@ -98,6 +98,50 @@ public class ActivityStudent {
     @Column(name = "orders_no")
     private String ordersNo;
 
+    /** 有无推广者 */
+    private String hasShare = "0";
+
+    /** 推荐者的ID */
+    private Integer userId;
+
+    /** 推荐者的姓名 */
+    private String shareName;
+
+    /** 推荐者的电话号码 */
+    private String sharePhone;
+
+    public String getHasShare() {
+        return hasShare;
+    }
+
+    public void setHasShare(String hasShare) {
+        this.hasShare = hasShare;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getShareName() {
+        return shareName;
+    }
+
+    public void setShareName(String shareName) {
+        this.shareName = shareName;
+    }
+
+    public String getSharePhone() {
+        return sharePhone;
+    }
+
+    public void setSharePhone(String sharePhone) {
+        this.sharePhone = sharePhone;
+    }
+
     public String getOrdersNo() {
         return ordersNo;
     }
