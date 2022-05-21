@@ -21,14 +21,16 @@ public class ShareUserQrService {
 
     public JsonResult buildQr(String params) {
         Integer recordId = Integer.parseInt(JsonTools.getJsonParam(params, "recordId"));
-        buildShareQrTools.buildQr(recordId);
-        List<ShareUserQr> list = shareUserQrDao.findByRecordId(recordId);
+        String type = JsonTools.getJsonParam(params, "type");
+        buildShareQrTools.buildQr(type, recordId);
+        List<ShareUserQr> list = shareUserQrDao.findByRecordId(type, recordId);
         return JsonResult.success().set("qrList", list);
     }
 
     public JsonResult listByRecordId(String params) {
         Integer recordId = Integer.parseInt(JsonTools.getJsonParam(params, "recordId"));
-        List<ShareUserQr> list = shareUserQrDao.findByRecordId(recordId);
+        String type = JsonTools.getJsonParam(params, "type");
+        List<ShareUserQr> list = shareUserQrDao.findByRecordId(type, recordId);
         return JsonResult.success().set("qrList", list);
     }
 }

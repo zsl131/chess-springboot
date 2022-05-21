@@ -22,6 +22,9 @@ public class ShareCourse {
 
     private String startTime;
 
+    /** 结束时间 */
+    private String endTime;
+
     /**
      * 课程状态
      * 0 - 待上架； 1-可报名；2-已结束

@@ -9,6 +9,7 @@ import com.zslin.bus.basic.model.Activity;
 import com.zslin.bus.basic.model.ActivityComment;
 import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.basic.model.Department;
+import com.zslin.bus.share.dao.IShareUserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,9 @@ public class WxActivityController {
 
     @Autowired
     private IDepartmentDao departmentDao;
+
+    @Autowired
+    private IShareUserDao shareUserDao;
 
     /** 获取当前活动 */
     @GetMapping(value = "current")
@@ -75,7 +79,10 @@ public class WxActivityController {
     }
 
     @GetMapping(value = "show")
-    public String show(Model model, Integer id, HttpServletRequest request) {
+    public String show(Model model, Integer id, Integer userId, HttpServletRequest request) {
+        if(userId!=null && userId>0) { //如果有用户ID，则有用户
+            model.addAttribute("user", shareUserDao.findOne(userId));
+        }
         Activity activity = activityDao.findOne(id);
         List<ActivityComment> commentList = activityCommentDao.listByActivityId(id);
         List<ActivityRecord> recordList = activityRecordDao.findByActId(id);

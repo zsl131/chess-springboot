@@ -16,10 +16,13 @@ public class ShareUserQr {
     private Integer id;
 
     /** 对应的活动ID */
-    private Integer recordId;
+    private Integer objId;
 
     /** 对应的活动标题 */
-    private String activityTitle;
+    private String objName;
+
+    /** 对应的名称，如:Activity、ActivityRecord */
+    private String qrType;
 
     /** 二维码地址 */
     private String qrPath;

@@ -47,7 +47,7 @@
                                 <p class="address" th:text="${record.address}"></p>
                             </div>
                             <div>
-                                <a th:if="${record.status eq '1'}" th:href="@{/wx/activityRecord/signUp(recordId=${record.id})}" class="weui-btn weui-btn_mini weui-btn_primary">报名</a>
+                                <a th:if="${record.status eq '1'}" th:href="@{/wx/activityRecord/signUp(recordId=${record.id},userId=${user ne null?user.id:''})}" class="weui-btn weui-btn_mini weui-btn_primary">报名</a>
                                 <div><a th:href="'/weixin/recordImage?recordId='+${record.id}" class="weui-btn weui-btn_mini weui-btn_primary">影集</a></div>
                                 <span th:unless="${record.status eq '1'}" class="">不可报名</span>
                             </div>

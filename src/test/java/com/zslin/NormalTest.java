@@ -136,7 +136,7 @@ public class NormalTest {
 
     @Test
     public void test41() {
-        String path = buildShareQrTools.buildQrPath(73, 1);
+        String path = buildShareQrTools.buildQrPath("", 73, 1);
         System.out.println(path);
     }
 

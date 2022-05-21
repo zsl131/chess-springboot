@@ -7,7 +7,9 @@ import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.pdf.qrcode.ErrorCorrectionLevel;
 import com.sun.javafx.iio.common.ImageTools;
 import com.zslin.basic.tools.ConfigTools;
+import com.zslin.bus.basic.dao.IActivityDao;
 import com.zslin.bus.basic.dao.IActivityRecordDao;
+import com.zslin.bus.basic.model.Activity;
 import com.zslin.bus.basic.model.ActivityRecord;
 import com.zslin.bus.share.dao.IShareUserDao;
 import com.zslin.bus.share.dao.IShareUserQrDao;
@@ -37,66 +39,113 @@ public class BuildShareQrTools {
     @Autowired
     private IActivityRecordDao activityRecordDao;
 
+    @Autowired
+    private IActivityDao activityDao;
+
     private static Integer QRCODE_SIZE = 300;
+
+    public static String BASE_URL = "http://server.qswkx.com";
+    public static class QR_TYPE {
+        public static String TYPE_RECORD = "ActivityRecord";
+        public static String TYPE_ACTIVITY = "Activity";
+        public static String TYPE_Course = "ShareCourse";
+    }
+
+    public static class QR_URL {
+        public static String URL_ACTIVITY = "/wx/activity/show?id=#objId#&userId=#userId#";
+        public static String URL_RECORD = "/wx/activityRecord/signUp?recordId=#objId#&userId=#userId#";
+    }
 
     @Autowired
     private ConfigTools configTools;
 
     /**
      * 生成所有用户的二维码
-     * @param recordId
+     * @param objId
      */
-    public void buildQr(Integer recordId) {
+    public void buildQr(String type, Integer objId) {
         List<ShareUser> userList = shareUserDao.findAll();
-        ActivityRecord ar = activityRecordDao.findOne(recordId);
-        for(ShareUser user: userList) {
-            buildQr(ar, user);
+        if(QR_TYPE.TYPE_RECORD.equalsIgnoreCase(type)) {
+            ActivityRecord ar = activityRecordDao.findOne(objId);
+            for(ShareUser user: userList) {
+                buildQrByActivityRecord(ar, user);
+            }
+        } else if(QR_TYPE.TYPE_ACTIVITY.equalsIgnoreCase(type)) {
+            Activity act = activityDao.findOne(objId);
+            for(ShareUser user: userList) {
+                buildQrByActivity(act, user);
+            }
         }
+
     }
 
     /**
      * 生成推广二维码
-     * @param recordId
+     * @param type
+     * @param objId
      * @param userId
      */
-    public void buildQr(Integer recordId, Integer userId) {
-        /*ShareUserQr suq = shareUserQrDao.findByRecordIdAndUserId(recordId, userId);
-        if(suq==null) {
-            suq = new ShareUserQr();
-            ActivityRecord ar = activityRecordDao.findOne(recordId);
-            ShareUser su = shareUserDao.findOne(userId);
-            suq.setName(su.getName());
-            suq.setPhone(su.getPhone());
-            suq.setActivityTitle(ar.getActTitle());
-            suq.setRecordId(recordId);
-            suq.setUserId(userId);
-            suq.setQrPath(buildQrPath(recordId, userId));
-            shareUserQrDao.save(suq);
-        }*/
-        buildQr(activityRecordDao.findOne(recordId), shareUserDao.findOne(userId));
+    public void buildQr(String type, Integer objId, Integer userId) {
+        ShareUser user = shareUserDao.findOne(userId);
+        if(QR_TYPE.TYPE_RECORD.equalsIgnoreCase(type)) {
+            buildQrByActivityRecord(activityRecordDao.findOne(objId), user);
+        } else if(QR_TYPE.TYPE_ACTIVITY.equalsIgnoreCase(type)) {
+            buildQrByActivity(activityDao.findOne(objId), user);
+        }
     }
 
-    private void buildQr(ActivityRecord record, ShareUser user) {
-        ShareUserQr suq = shareUserQrDao.findByRecordIdAndUserId(record.getId(), user.getId());
+    private void buildQrByActivityRecord(ActivityRecord obj, ShareUser user) {
+        Integer userId = user.getId();
+        Integer objId = obj.getId();
+        ShareUserQr suq = shareUserQrDao.findByType(QR_TYPE.TYPE_RECORD, objId, userId);
         if(suq==null) {
-            Integer recordId = record.getId();
-            Integer userId = user.getId();
             suq = new ShareUserQr();
             suq.setName(user.getName());
             suq.setPhone(user.getPhone());
-            suq.setActivityTitle(record.getActTitle());
-            suq.setRecordId(recordId);
+            suq.setObjName(obj.getActTitle());
+            suq.setObjId(objId);
             suq.setUserId(userId);
-            suq.setQrPath(buildQrPath(recordId, userId));
+            suq.setQrType(QR_TYPE.TYPE_RECORD);
+            suq.setQrPath(buildQrPath(QR_URL.URL_RECORD, objId, userId));
             shareUserQrDao.save(suq);
         }
     }
 
-    public String buildQrPath(Integer recordId, Integer userId) {
+    private void buildQrByActivity(Activity obj, ShareUser user) {
+        Integer userId = user.getId();
+        Integer objId = obj.getId();
+        ShareUserQr suq = shareUserQrDao.findByType(QR_TYPE.TYPE_ACTIVITY, objId, userId);
+        if(suq==null) {
+            suq = new ShareUserQr();
+            suq.setName(user.getName());
+            suq.setPhone(user.getPhone());
+            suq.setObjName(obj.getTitle());
+            suq.setObjId(objId);
+            suq.setUserId(userId);
+            suq.setQrType(QR_TYPE.TYPE_ACTIVITY);
+            suq.setQrPath(buildQrPath(QR_URL.URL_ACTIVITY, objId, userId));
+            shareUserQrDao.save(suq);
+        }
+    }
+
+    /**
+     *
+     * @param path 如： /wx/activityRecord/signUp?recordId=#objId#&userId=#userId#
+     * @param objId 对象ID
+     * @param userId 用户ID
+     * @return
+     */
+    private String buildUrl(String path, Integer objId, Integer userId) {
+        path = path.replaceAll("#objId#", String.valueOf(objId)).replaceAll("#userId#", String.valueOf(userId));
+        return BASE_URL + path;
+    }
+
+    public String buildQrPath(String urlPath, Integer objId, Integer userId) {
         try {
-            String url = "http://server.qswkx.com/wx/activityRecord/signUp?recordId="+recordId+"&userId="+userId; //TODO 这里需要生成url地址
+            //String url = BASE_URL + "/wx/activityRecord/signUp?recordId="+recordId+"&userId="+userId; //TODO 这里需要生成url地址
+            String url = buildUrl(urlPath, objId, userId);
             BufferedImage bi = createImage(url);
-            String fileName = "share_"+userId+"_"+recordId+".jpg";
+            String fileName = "share_"+userId+"_"+objId+"_"+System.currentTimeMillis()+".jpg";
             String path = configTools.getUploadPath("publicFile/shareQr")+ fileName;
 //            System.out.println("========"+ path);
             boolean writeFlag = ImageIO.write(bi, "jpg", new File(path));
