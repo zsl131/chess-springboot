@@ -137,12 +137,12 @@ public class WxActivityRecordController {
     }
 
     @PostMapping(value = "addStudent")
-    public @ResponseBody String addStudent(String name, String phone, String sex, Integer school, HttpServletRequest request) {
+    public @ResponseBody String addStudent(String name, String phone, String sex, Integer age, Integer school, HttpServletRequest request) {
         try {
             String openid = SessionTools.getOpenid(request);
             Student stu = new Student();
             stu.setOpenid(openid);
-//            stu.setAgeId(age);
+            stu.setAgeNum(age);
             stu.setSchoolId(school);
             stu.setName(name.replaceAll(" ", "")); //替换空格
 //            stu.setAgeName(ageDicDao.findNameById(age));
@@ -203,7 +203,8 @@ public class WxActivityRecordController {
                         as.setActId(ar.getActId());
                         as.setActTitle(ar.getActTitle());
                         as.setAddress(ar.getAddress());
-                        as.setAgeName(stu.getAgeName());
+//                        as.setAgeName(stu.getAgeName());
+                        as.setAgeName(stu.getAgeNum()+"");
                         as.setAvatarUrl(account.getAvatarUrl());
                         as.setDepId(ar.getDepId());
                         as.setHoldTime(ar.getHoldTime());

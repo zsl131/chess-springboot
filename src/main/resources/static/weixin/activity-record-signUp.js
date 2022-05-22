@@ -30,6 +30,16 @@ $(function() {
                       '<input class="weui-input" type="tel" name="phone" placeholder="请输入手机号码">'+
                     '</div>'+
                   '</div>'+
+
+                '<div class="weui-cell weui-cell_vcode">'+
+                '<div class="weui-cell__hd">'+
+                '<label class="weui-label">年龄</label>'+
+                '</div>'+
+                '<div class="weui-cell__bd">'+
+                '<input class="weui-input" type="number" name="age" placeholder="请输入年龄">'+
+                '</div>'+
+                '</div>'+
+
                   '<div class="weui-cell weui-cell_select weui-cell_select-after">'+
                       '<div class="weui-cell__hd">'+
                         '<label for="" class="weui-label">性别</label>'+
@@ -42,7 +52,7 @@ $(function() {
                       '</div>'+
                     '</div>'+
 
-                    '<div class="weui-cell weui-cell_select weui-cell_select-after">'+
+                    /*'<div class="weui-cell weui-cell_select weui-cell_select-after">'+
                       '<div class="weui-cell__hd">'+
                         '<label for="" class="weui-label">就读学校</label>'+
                       '</div>'+
@@ -51,13 +61,14 @@ $(function() {
                           schoolHtml+
                         '</select>'+
                       '</div>'+
-                    '</div>'+
+                    '</div>'+*/
 
                 '</div>';
             var addStuDialog = confirmDialog(html, "<span class='fa fa-plus'></span> 添加学生", function() {
                 var name = $(addStuDialog).find("input[name='name']").val();
                 var phone = $(addStuDialog).find("input[name='phone']").val();
                 var sex = $(addStuDialog).find("select[name='sex']").val();
+                var age = $(addStuDialog).find("input[name='age']").val();
                 //var age = $(addStuDialog).find("select[name='age']").val();
                 var school = $(addStuDialog).find("select[name='school']").val();
 
@@ -67,7 +78,7 @@ $(function() {
                     $.toast("请完善信息", "cancel", function(toast) {});
                 } else {
                     $(addStuDialog).remove();
-                    $.post("/wx/activityRecord/addStudent", {name: name, phone: phone, sex: sex, school: school}, function(res) {
+                    $.post("/wx/activityRecord/addStudent", {name: name, phone: phone, sex: sex, school: school, age: age}, function(res) {
                         if(res=='1') {
                             $.toast("添加成功", function() {
                               window.location.reload();

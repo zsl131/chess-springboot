@@ -27,7 +27,7 @@ public class ExportStudentTools {
     private static final String FIELD_SPE = "__";
 
     static {
-        columnName = new String [] {"活动标题", "活动时间", "姓名", "电话", "来源", "状态", "签到", "备注"};
+        columnName = new String [] {"活动标题", "活动时间", "姓名", "电话", "推荐人", "来源", "状态", "签到", "备注"};
     }
 
     /** 获取Get方法 */
@@ -194,10 +194,11 @@ public class ExportStudentTools {
                 else if(j==1) {cell.setCellValue(as.getHoldTime());}
                 else if(j==2) {cell.setCellValue(as.getStuName());}
                 else if(j==3) {cell.setCellValue(as.getPhone());}
-                else if(j==4) {cell.setCellValue("0".equals(as.getFromFlag())?"社会":"学校");}
-                else if(j==5) {cell.setCellValue("1".equals(as.getStatus())?"通过":"驳回");}
-                else if(j==6) {cell.setCellValue("1".equals(as.getHasCheck())?"已签到":"未签到");}
-                else if(j==7) {cell.setCellValue("             ");}
+                else if(j==4) {cell.setCellValue("1".equals(as.getHasShare())?(as.getShareName()+"-"+as.getSharePhone()):"无");}
+                else if(j==5) {cell.setCellValue("0".equals(as.getFromFlag())?"社会":"学校");}
+                else if(j==6) {cell.setCellValue("1".equals(as.getStatus())?"通过":"驳回");}
+                else if(j==7) {cell.setCellValue("1".equals(as.getHasCheck())?"已签到":"未签到");}
+                else if(j==8) {cell.setCellValue("             ");}
                 cell.setCellStyle(style); //设置单元格样式
             }
         }

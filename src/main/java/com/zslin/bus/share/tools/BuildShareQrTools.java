@@ -100,15 +100,16 @@ public class BuildShareQrTools {
         ShareUserQr suq = shareUserQrDao.findByType(QR_TYPE.TYPE_RECORD, objId, userId);
         if(suq==null) {
             suq = new ShareUserQr();
-            suq.setName(user.getName());
-            suq.setPhone(user.getPhone());
-            suq.setObjName(obj.getActTitle());
             suq.setObjId(objId);
             suq.setUserId(userId);
             suq.setQrType(QR_TYPE.TYPE_RECORD);
             suq.setQrPath(buildQrPath(QR_URL.URL_RECORD, objId, userId));
-            shareUserQrDao.save(suq);
+        } else {
+            suq.setName(user.getName());
+            suq.setPhone(user.getPhone());
+            suq.setObjName(obj.getActTitle());
         }
+        shareUserQrDao.save(suq);
     }
 
     private void buildQrByActivity(Activity obj, ShareUser user) {
@@ -117,15 +118,16 @@ public class BuildShareQrTools {
         ShareUserQr suq = shareUserQrDao.findByType(QR_TYPE.TYPE_ACTIVITY, objId, userId);
         if(suq==null) {
             suq = new ShareUserQr();
-            suq.setName(user.getName());
-            suq.setPhone(user.getPhone());
-            suq.setObjName(obj.getTitle());
             suq.setObjId(objId);
             suq.setUserId(userId);
             suq.setQrType(QR_TYPE.TYPE_ACTIVITY);
             suq.setQrPath(buildQrPath(QR_URL.URL_ACTIVITY, objId, userId));
-            shareUserQrDao.save(suq);
+        } else {
+            suq.setName(user.getName());
+            suq.setPhone(user.getPhone());
+            suq.setObjName(obj.getTitle());
         }
+        shareUserQrDao.save(suq);
     }
 
     /**

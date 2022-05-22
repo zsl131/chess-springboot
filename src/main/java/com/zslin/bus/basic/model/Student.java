@@ -26,6 +26,9 @@ public class Student {
     @Column(name = "age_name")
     private String ageName;
 
+    /** 年龄 */
+    private Integer ageNum;
+
     @Column(name = "school_id")
     private Integer schoolId;
 
@@ -53,6 +56,14 @@ public class Student {
 
     @Column(name = "create_long")
     private Long createLong;
+
+    public Integer getAgeNum() {
+        return ageNum;
+    }
+
+    public void setAgeNum(Integer ageNum) {
+        this.ageNum = ageNum;
+    }
 
     public String getCreateDate() {
         return createDate;
