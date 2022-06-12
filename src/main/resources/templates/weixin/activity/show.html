@@ -74,6 +74,9 @@
                             </div>
                         </div>
 
+                        <div th:if="${user ne null and #strings.length(user.phone) eq 11}">
+                            <i th:text="${#strings.substring(user.phone, 7, 11)}" style="font-size: 10px; color:#ddd;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
