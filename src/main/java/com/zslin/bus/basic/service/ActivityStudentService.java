@@ -125,6 +125,17 @@ public class ActivityStudentService {
         }
     }
 
+    /** 删除 */
+    public JsonResult deleteStudent(String params) {
+        try {
+            Integer id = JsonTools.getId(params);
+            activityStudentDao.delete(id);
+            return JsonResult.success("删除成功");
+        } catch (Exception e) {
+            return JsonResult.error(e.getMessage());
+        }
+    }
+
     /**
      * 用于签到
      * @param params {openid: 'abc123', recordId: 1}
